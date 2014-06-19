@@ -25,6 +25,13 @@ public class Game implements Runnable
   private boolean        isRunning        = false;
   //the background image of the screen
   private BufferedImage  background;
+  //Prespective to render
+  private Perspective perspective = new PerspectiveFirstPerson();
+  //Player
+  private Player player = new Player();
+  //Map
+  private Map map;
+
 
   //loop timing stuff
   private int  fps       = 0;
@@ -41,6 +48,8 @@ public class Game implements Runnable
     window = new GameWindow(TITLE, WINDOW_SIZE);
     bStrat = window.getBufferStrategy();
     isRunning = true;
+    map = new Map("MapTest");
+
     run();
   }
 
@@ -54,7 +63,9 @@ public class Game implements Runnable
       getInput();
       update();
       playSound();
+      player.rotate(1);///#######testing
       render();
+
       try{
         //get how long the loop took to execute
         curNano = System.nanoTime();
@@ -74,6 +85,7 @@ public class Game implements Runnable
         e.printStackTrace();
         System.exit(1);
       }
+
     }
   }
 
@@ -98,12 +110,15 @@ public class Game implements Runnable
     try{
 
       //TODO remove this
-      Random rand = new Random(5);
+     /* Random rand = new Random(5);
       for(int i = 0; i < WINDOW_SIZE.getWidth(); i+=10)
         for(int j = 0; j < WINDOW_SIZE.getHeight(); j+=10){
           graphics.setColor(new Color(rand.nextInt()));
           graphics.fillRect(i, j, 10, 10);
-                }
+        }
+        */
+         perspective.render(graphics,(int)WINDOW_SIZE.getWidth(),(int)WINDOW_SIZE.getHeight(),this,player,this.map);
+
 
 
 
