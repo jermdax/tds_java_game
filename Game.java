@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
+
 public class Game implements Runnable
 {
   private static final Dimension WINDOW_SIZE   = new Dimension(800, 600);
@@ -28,10 +29,11 @@ public class Game implements Runnable
   //Prespective to render
   private Perspective perspective;
   //Player
-  private Player player = new Player();
+  private Player player;
   //Map
   private Map map;
-
+  //keyboard input
+  public Keyboard key;
 
   //loop timing stuff
   private int  fps       = 0;
@@ -45,7 +47,10 @@ public class Game implements Runnable
 
   public Game()
   {
-    window = new GameWindow(TITLE, WINDOW_SIZE);
+    key = new Keyboard();
+    player = new Player(2,2,key,true);
+   
+    window = new GameWindow(TITLE, WINDOW_SIZE,key);
     bStrat = window.getBufferStrategy();
     isRunning = true;
     map = new Map("MapTest");
@@ -63,7 +68,6 @@ public class Game implements Runnable
       getInput();
       update();
       playSound();
-      player.rotate(1);///#######testing
       render();
 
       try{
@@ -92,11 +96,13 @@ public class Game implements Runnable
   private void getInput()
   {
     //readKeyboard
+    key.getInput();  
   }
 
   private void update()
   {
     //update the game logic based on input and time (AI?, projectiles)
+    player.update(); 
   }
 
   private void playSound()
@@ -109,18 +115,7 @@ public class Game implements Runnable
     Graphics graphics = bStrat.getDrawGraphics();
     try{
 
-      //TODO remove this
-     /* Random rand = new Random(5);
-      for(int i = 0; i < WINDOW_SIZE.getWidth(); i+=10)
-        for(int j = 0; j < WINDOW_SIZE.getHeight(); j+=10){
-          graphics.setColor(new Color(rand.nextInt()));
-          graphics.fillRect(i, j, 10, 10);
-        }
-        */
-         perspective.render(graphics,(int)WINDOW_SIZE.getWidth(),(int)WINDOW_SIZE.getHeight(),this,player);
-
-
-
+        perspective.render(graphics,(int)WINDOW_SIZE.getWidth(),(int)WINDOW_SIZE.getHeight(),this,player);
 
       if( ! bStrat.contentsLost())
         bStrat.show();
