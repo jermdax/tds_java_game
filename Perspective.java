@@ -2,5 +2,5 @@ import java.awt.Graphics;
 
 public interface Perspective
 {
-	public abstract void render(Graphics gr, int screenWidth, int screenHidth ,Game game, Player player, Map worldMap);
+	public abstract void render(Graphics gr, int screenWidth, int screenHidth ,Game game, Player player);
 }

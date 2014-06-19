@@ -26,7 +26,7 @@ public class Game implements Runnable
   //the background image of the screen
   private BufferedImage  background;
   //Prespective to render
-  private Perspective perspective = new PerspectiveFirstPerson();
+  private Perspective perspective;
   //Player
   private Player player = new Player();
   //Map
@@ -49,7 +49,7 @@ public class Game implements Runnable
     bStrat = window.getBufferStrategy();
     isRunning = true;
     map = new Map("MapTest");
-
+    perspective = new PerspectiveFirstPerson(map);
     run();
   }
 
@@ -117,7 +117,7 @@ public class Game implements Runnable
           graphics.fillRect(i, j, 10, 10);
         }
         */
-         perspective.render(graphics,(int)WINDOW_SIZE.getWidth(),(int)WINDOW_SIZE.getHeight(),this,player,this.map);
+         perspective.render(graphics,(int)WINDOW_SIZE.getWidth(),(int)WINDOW_SIZE.getHeight(),this,player);
 
 
 

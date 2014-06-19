@@ -4,12 +4,18 @@ import java.awt.Color;
 public class PerspectiveFirstPerson implements Perspective
 {
 
-  public void render(Graphics gr, int screenWidth, int screenHeight ,Game game, Player player, Map worldMap)
+  private static Map worldMap;
+
+  public PerspectiveFirstPerson(Map worldMap)
   {
-    //TODO call methoids to render first person
+    this.worldMap = worldMap;
+  }
+
+  public void render(Graphics gr, int screenWidth, int screenHeight ,Game game, Player player)
+  {
     
 
-      gr.setColor(Color.BLACK);
+      gr.setColor(Color.BLACK);//the screen would not reset
       gr.fillRect(0,0,screenWidth,screenHeight);
 
     for(int i = 0; i <= screenWidth; i++)
@@ -86,7 +92,7 @@ public class PerspectiveFirstPerson implements Perspective
           side = 1;
         }
         //Check if ray has hit a wall
-        if (worldMap.map[mapX][mapY] > 0) hit = 1;
+        if (worldMap.getMapTile(mapX,mapY) > 0) hit = 1;
       } 
 
 
@@ -116,7 +122,7 @@ public class PerspectiveFirstPerson implements Perspective
       
 
       Color color;
-      switch(worldMap.map[mapX][mapY])
+      switch(worldMap.getMapTile(mapX,mapY))
       {
         case 1 : 
           color = Color.RED;

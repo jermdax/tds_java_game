@@ -85,8 +85,7 @@ public class Map{
   }
 
   public short[][] getMap()  {  return this.map;  }  
-  
-
+  public short getMapTile(int x,int y)  {  return this.map[x][y];  }
 
   public void printMap()
   {
@@ -101,7 +100,6 @@ public class Map{
     }
 
   }
-
 
   public static void main(String[] args)
   {  
