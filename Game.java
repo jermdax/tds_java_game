@@ -47,7 +47,7 @@ public class Game implements Runnable
 
   public Game()
   {
-    key = new Keyboard(.7);
+    key = new Keyboard(.0625);
     player = new Player(2,2,key);
    
     window = new GameWindow(TITLE, WINDOW_SIZE,key);

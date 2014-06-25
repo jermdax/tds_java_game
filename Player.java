@@ -3,7 +3,7 @@ public class Player{
   private double posX = 2 ,  posY = 2;
   private double dirX = 1,  dirY = 0;
   private double planeX = 0,  planeY = .66; 
-  private double speed = .1 ,rotateSpeed = .5;
+  private double speed = .01 ,rotateSpeed = .5;
   private Keyboard input;
 
   public Player(double x, double y, Keyboard key)

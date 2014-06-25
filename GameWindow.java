@@ -13,6 +13,10 @@ import java.awt.PointerInfo;
 import javax.swing.SwingUtilities;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.Cursor;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+
 public class GameWindow
 {
   private final JFrame frame;
@@ -43,22 +47,28 @@ public class GameWindow
     canvas = new Canvas();
     canvas.setPreferredSize(windowSize);
     canvas.setIgnoreRepaint(true);
+     Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(new BufferedImage(16,16, BufferedImage.TYPE_INT_ARGB),new Point(0 ,0),"blank cursor");
+
+    canvas.setCursor(blankCursor);
     canvas.addKeyListener(input);
     canvas.addMouseMotionListener(input);
     frame.add(canvas);
 
     frame.pack();
     frame.setVisible(true);
+    origin = frame.getLocationOnScreen();
+    origin.translate(canvas.getWidth()/2,canvas.getHeight()/2);
+
+ 
 
     canvas.createBufferStrategy(2);
     bStrat = canvas.getBufferStrategy();
-    origin = frame.getLocationOnScreen();
-    origin.setLocation(origin.getX()+canvas.getWidth()/2, origin.getY()+canvas.getHeight()/2);
+   ;
     frame.addComponentListener(new ComponentAdapter() {
       public void componentMoved(ComponentEvent e)
       {
         Point frameLoc = frame.getLocationOnScreen();
-        origin.setLocation(frameLoc.getX()+canvas.getWidth()/2, frameLoc.getY()+canvas.getHeight()/2);
+        origin.setLocation(frameLoc.getX()+canvas.getWidth()/2, frameLoc.getY() + canvas.getHeight()/2);
         input.setOrigin(origin);
       }
     });

@@ -140,6 +140,10 @@ public class PerspectiveFirstPerson implements Perspective
 
 
       }
+      if(side == 1)
+      {
+       color = color.darker();
+      }
       gr.setColor(color);
       gr.drawLine(i,drawEnd,i,drawStart);
 

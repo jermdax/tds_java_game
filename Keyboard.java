@@ -5,7 +5,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.PointerInfo;
-
+ 
 
 public class Keyboard implements KeyListener, MouseMotionListener  {
 
@@ -76,12 +76,13 @@ public class Keyboard implements KeyListener, MouseMotionListener  {
 
     if(mouseNewX != origin.getX())
     {
-      mouseX = (mouseNewX - mouseOldX) * sensitivity;
-      mouseY = (mouseNewY - mouseOldY) * sensitivity;
+      mouseX += (mouseNewX - mouseOldX) * sensitivity;
+     
+      mouseY += (mouseNewY - mouseOldY) * sensitivity;
     }
     mouseOldX = mouseNewX;
     mouseOldY = mouseNewY;
-
+  System.out.println(mouseX);
   }
 
   @Override
