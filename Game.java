@@ -47,8 +47,8 @@ public class Game implements Runnable
 
   public Game()
   {
-    key = new Keyboard();
-    player = new Player(2,2,key,true);
+    key = new Keyboard(.7);
+    player = new Player(2,2,key);
    
     window = new GameWindow(TITLE, WINDOW_SIZE,key);
     bStrat = window.getBufferStrategy();
@@ -103,6 +103,8 @@ public class Game implements Runnable
   {
     //update the game logic based on input and time (AI?, projectiles)
     player.update(); 
+    window.resetMousePos();
+
   }
 
   private void playSound()

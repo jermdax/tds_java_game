@@ -1,5 +1,3 @@
-
-
 public class Player{
 
   private double posX = 2 ,  posY = 2;
@@ -7,76 +5,82 @@ public class Player{
   private double planeX = 0,  planeY = .66; 
   private double speed = .1 ,rotateSpeed = .5;
   private Keyboard input;
-  private boolean doomControl;
-  public Player(double x, double y, Keyboard key, boolean doomControl)
+
+  public Player(double x, double y, Keyboard key)
   {
-  	posX = x;
-  	posY = y;
+    posX = x;
+    posY = y;
     input = key;
-    this.doomControl = doomControl;
   }
 
   public void update()
   {
 
-    double x = 0, y = 0;
+    double x = 0, y = 0, r = 0;
 
     if( input.up )
     {
-      x = speed;
+      x = -speed;
     }  
     if(input.down)
     {
-      x = -speed;
+      x = speed;
     }
     if(input.left)
     {
       y = speed;
-      if(doomControl)
-      {
-        y = -rotateSpeed;
-      }
+   
     }
     if(input.right)
     {
       y = -speed;
-      if(doomControl)
-      {
-        y =  rotateSpeed;
-      }
     }
-    
-    if(doomControl)
+    //rotate controls till mouse is done
+   /* if(input.q)
     {
-      this.moveLocal(x,0);
-      this.rotate(y);
+      r = -speed;
     }
-    else
+    if(input.e)
     {
-      this.moveLocal(x,y);
+     r = speed;
     }
+    */
+    /*normalsied for movement where x and y != 0
+    if x and y are both 1 the distance traveled it 40% more then in one axis
+    only works for 45 degrees*/
+
+    if(x != 0 && y !=0)
+    {
+        x *= .707;
+        y *= .707;
+
+    }
+
+    this.rotate(input.mouseX);
+    input.reset();
+    this.moveLocal(x,y);
+
   }
 
   //will move the player with respect to direction
   public void moveLocal(double x, double y)
   {
-    
+   
     double angle = Math.atan(dirY/dirX);
     double sin = Math.sin(angle);
     double cos = Math.cos(angle);
-
+   // System.out.println(dirY + "  " + dirX + " " + dirY *dirX);
     //might have to do this for Y also
     if( dirX <0)
     {
-      posX += cos * -x - sin*y;
-      posY += sin * -x + cos*y;
+      posX += cos * x - sin * y;
+      posY += sin * x + cos * y;
     }  
     else
     {
-      posX +=  cos * x - sin * y;
-      posY += sin * x + cos * y;
+       posX -= cos * x - sin * y;
+       posY -= sin * x + cos * y;
     }
-      
   }
 
   //move player in world space
