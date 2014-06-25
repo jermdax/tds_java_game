@@ -1,3 +1,4 @@
+
 public class Player{
 
   private double posX = 2 ,  posY = 2;
@@ -55,8 +56,8 @@ public class Player{
         y *= .707;
 
     }
-
-    this.rotate(input.mouseX);
+  
+    this.rotate(input.getMouseX());
     input.reset();
     this.moveLocal(x,y);
 

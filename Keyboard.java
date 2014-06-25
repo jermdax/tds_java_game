@@ -68,23 +68,21 @@ public class Keyboard implements KeyListener, MouseMotionListener  {
   public void mouseMoved(MouseEvent e)
   {
      
-    PointerInfo a = MouseInfo.getPointerInfo();
+  /*  PointerInfo a = MouseInfo.getPointerInfo();
     Point point = new Point(a.getLocation());
 
     double mouseNewX = point.getX();
     double mouseNewY = point.getY();
 
-    System.out.println("mouseNewX = " + mouseNewX + "; originX = " + origin.getX() + " boolean result " + (mouseNewX != origin.getX()));
     if(mouseNewX != origin.getX())
     {
-      System.out.println("difference between newMouse and origin");
-      mouseX = (mouseNewX - mouseOldX) * sensitivity;
-      mouseY = (mouseNewY - mouseOldY) * sensitivity;
+      mouseX += (mouseNewX - mouseOldX) * sensitivity;
+     
+      mouseY += (mouseNewY - mouseOldY) * sensitivity;
     }
-    else{System.out.println("new mouse equals origin location");}
     mouseOldX = mouseNewX;
     mouseOldY = mouseNewY;
-  System.out.println(mouseX);
+  System.out.println(mouseX);*/
   }
 
   @Override
@@ -99,8 +97,8 @@ public class Keyboard implements KeyListener, MouseMotionListener  {
 
   }
 
-  public double getMouseX(){ return mouseX;}
-  public double getMouseY(){ return mouseY;}
+  public double getMouseX(){ return  MouseInfo.getPointerInfo().getLocation().getX() - origin.getX();}
+  public double getMouseY(){ return  MouseInfo.getPointerInfo().getLocation().getY() - origin.getY();}
 
   public void setOrigin(Point origin)
   {
