@@ -52,12 +52,13 @@ public class GameWindow
 
     canvas.createBufferStrategy(2);
     bStrat = canvas.getBufferStrategy();
-    origin = new Point();
+    origin = frame.getLocationOnScreen();
+    origin.setLocation(origin.getX()+canvas.getWidth()/2, origin.getY()+canvas.getHeight()/2);
     frame.addComponentListener(new ComponentAdapter() {
       public void componentMoved(ComponentEvent e)
       {
-        origin.setLocation(frame.getLocationOnScreen());
-        origin.translate(frame.getWidth()/2,frame.getHeight()/2);
+        Point frameLoc = frame.getLocationOnScreen();
+        origin.setLocation(frameLoc.getX()+canvas.getWidth()/2, frameLoc.getY()+canvas.getHeight()/2);
         input.setOrigin(origin);
       }
     });
@@ -69,7 +70,7 @@ public class GameWindow
 
   public void resetMousePos()
   {
-    robot.mouseMove((int)origin.getX(),(int)origin.getY());
+    robot.mouseMove((int)origin.getX(), (int)origin.getY());
   }
 
   //test
