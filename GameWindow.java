@@ -58,6 +58,7 @@ public class GameWindow
     frame.setVisible(true);
     origin = frame.getLocationOnScreen();
     origin.translate(canvas.getWidth()/2,canvas.getHeight()/2);
+    input.setOrigin(origin);
 
  
 

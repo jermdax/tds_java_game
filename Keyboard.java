@@ -74,12 +74,14 @@ public class Keyboard implements KeyListener, MouseMotionListener  {
     double mouseNewX = point.getX();
     double mouseNewY = point.getY();
 
+    System.out.println("mouseNewX = " + mouseNewX + "; originX = " + origin.getX() + " boolean result " + (mouseNewX != origin.getX()));
     if(mouseNewX != origin.getX())
     {
-      mouseX += (mouseNewX - mouseOldX) * sensitivity;
-     
-      mouseY += (mouseNewY - mouseOldY) * sensitivity;
+      System.out.println("difference between newMouse and origin");
+      mouseX = (mouseNewX - mouseOldX) * sensitivity;
+      mouseY = (mouseNewY - mouseOldY) * sensitivity;
     }
+    else{System.out.println("new mouse equals origin location");}
     mouseOldX = mouseNewX;
     mouseOldY = mouseNewY;
   System.out.println(mouseX);
