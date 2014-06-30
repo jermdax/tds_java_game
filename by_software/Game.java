@@ -60,7 +60,7 @@ public class Game implements Runnable
     window = new GameWindow(TITLE, WINDOW_SIZE,key);
     bStrat = window.getBufferStrategy();
     isRunning = true;
-    map = new Map("D:/work/by_software/bin/by_software/map/MapTest.map");
+    map = new Map("by_software/map/MapTest.map");
     player = new Player(2,2,key,map);
     perspective = new PerspectiveFirstPerson(map);
     run();

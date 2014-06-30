@@ -244,8 +244,8 @@ public class MapMaker {
   }
   //TODO implemt a MapTtle Interface so outer enums can be used
   private enum MapTile{
-  Void("Void","D:/work/by_software/bin/by_software/map/sprites/01.png"),
-  Wall("wall","D:/work/by_software/bin/by_software/map/sprites/02.png");
+  Void("Void","by_software/map/sprites/01.png"),
+  Wall("wall","by_software/map/sprites/02.png");
          
   private BufferedImage sprite;
   
