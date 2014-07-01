@@ -11,6 +11,9 @@ import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.WindowListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowAdapter;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
@@ -20,13 +23,17 @@ import by_software.engine.input.Keyboard;
 
 public class GameWindow
 {
-  private final JFrame frame;
-  private BufferStrategy bStrat;
+  private final JFrame          frame;
+  private final BufferStrategy  bStrat;
   //used to move mouse
-  private Robot robot;
-  private final Keyboard input;
-  private Canvas canvas;
-  private final Point origin;
+  private       Robot           robot;
+  private       Keyboard        input;
+  private final Canvas          canvas       = new Canvas();
+  private final Point           origin;
+  private       boolean         releasedMouse = false;
+  private final Cursor          blankCursor  = Toolkit.getDefaultToolkit().createCustomCursor(
+                                                new BufferedImage(16,16, BufferedImage.TYPE_INT_ARGB),
+                                                new Point(0 ,0),"blank cursor");
 
   public GameWindow(String title, Dimension windowSize,final  Keyboard input)
   {
@@ -45,12 +52,11 @@ public class GameWindow
     frame.setIgnoreRepaint(true);
 
 
-    canvas = new Canvas();
     canvas.setPreferredSize(windowSize);
     canvas.setIgnoreRepaint(true);
-     Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(new BufferedImage(16,16, BufferedImage.TYPE_INT_ARGB),new Point(0 ,0),"blank cursor");
-
+    
     canvas.setCursor(blankCursor);
+
     canvas.addKeyListener(input);
     canvas.addMouseMotionListener(input);
     frame.add(canvas);
@@ -65,7 +71,7 @@ public class GameWindow
 
     canvas.createBufferStrategy(2);
     bStrat = canvas.getBufferStrategy();
-   ;
+
     frame.addComponentListener(new ComponentAdapter() {
       public void componentMoved(ComponentEvent e)
       {
@@ -74,15 +80,48 @@ public class GameWindow
         input.setOrigin(origin);
       }
     });
-
+    
+    frame.addWindowListener(new WindowAdapter() 
+    {
+      //return mouse control to the user
+      public void windowDeactivated(WindowEvent e)
+      {
+        releaseMouse();
+      }
+      //get the game to capture the mouse
+      public void windowActivated(WindowEvent e)
+      {
+        captureMouse();
+      }
+    });
   }
 
-  public JFrame getFrame() {return frame;}
+  public JFrame getFrame()                  {return frame; }
   public BufferStrategy getBufferStrategy() {return bStrat;}
+
+  public boolean mouseReleased()
+  {
+    return releasedMouse;
+  }
+
+  public void releaseMouse()
+  {
+    canvas.setCursor( Cursor.getDefaultCursor() );
+    releasedMouse = true;
+  }
+
+  public void captureMouse()
+  {
+    canvas.setCursor(blankCursor);
+    releasedMouse = false;
+  }
 
   public void resetMousePos()
   {
-    robot.mouseMove((int)origin.getX(), (int)origin.getY());
+    if( ! releasedMouse)
+    {
+      robot.mouseMove((int)origin.getX(), (int)origin.getY());
+    }
   }
 
   //test

@@ -54,7 +54,7 @@ public class Game implements Runnable
 
   public Game()
   {
-    key = new Keyboard(.25);
+    key = new Keyboard(.25, this);
     
    
     window = new GameWindow(TITLE, WINDOW_SIZE,key);
@@ -104,13 +104,14 @@ public class Game implements Runnable
   private void getInput()
   {
     //readKeyboard
-    key.getInput();  
+    key.getInput();
   }
 
   private void update()
   {
     //update the game logic based on input and time (AI?, projectiles)
-    player.update(); 
+    player.update();
+    key.handleKeys();
     window.resetMousePos();
 
   }
@@ -150,6 +151,8 @@ public class Game implements Runnable
     }
     ++frames;
   }
+
+  public GameWindow getWindow(){return window;}
 
   public static void main(String[] args){new Game();}
 }

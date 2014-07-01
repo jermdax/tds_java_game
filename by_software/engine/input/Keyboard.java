@@ -7,6 +7,9 @@ import java.awt.event.MouseMotionListener;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.PointerInfo;
+
+import by_software.Game;
+import by_software.engine.render.graphics.GameWindow;
  
 
 public class Keyboard implements KeyListener, MouseMotionListener  {
@@ -17,14 +20,18 @@ public class Keyboard implements KeyListener, MouseMotionListener  {
   public boolean up, down, left, right, space, esc, q, e;
   public  double mouseX = 0 , mouseY = 0;
 
-  private double mouseOldX = 0, mouseOldY = 0;
-  private double sensitivity, sensitivityReset;
-  private boolean ignoreMouseMovement = false;
-  private Point origin = new Point();
+  private double      mouseOldX = 0, mouseOldY = 0;
+  private double      sensitivity, sensitivityReset;
+  private boolean     ignoreMouseMovement = false;
+  private Point       origin = new Point();
+  private Game        game;
+  private GameWindow  gameWindow;
 
-  public Keyboard(double sensitivity)
+  public Keyboard(double sensitivity, Game game)
   {
-    this.sensitivity = sensitivity;
+    this.sensitivity  = sensitivity;
+    this.game         = game;
+    this.gameWindow   = game.getWindow();
   }
 
 
@@ -39,7 +46,12 @@ public class Keyboard implements KeyListener, MouseMotionListener  {
     e = keys[KeyEvent.VK_E];
     space = keys[KeyEvent.VK_SPACE];
     esc = keys[KeyEvent.VK_ESCAPE];
- 
+  }
+
+  public void handleKeys()
+  {
+    //maybe handle keyinput in here instead of in each individual class?
+    //this would make it easier to find and change key behaviour
   }
   
   public void reset()
@@ -50,15 +62,27 @@ public class Keyboard implements KeyListener, MouseMotionListener  {
 
   @Override
   public void keyPressed(KeyEvent e) {
-    
-    keys[e.getKeyCode()] = true;
-    
+    if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+    {
+      if( game.getWindow().mouseReleased() )
+      {
+        game.getWindow().captureMouse();
+      }
+      else
+      {
+        game.getWindow().releaseMouse();
+      }
+    }
+    else
+    {
+      keys[e.getKeyCode()] = true;
+    }
   }
 
   @Override
-  public void keyReleased(KeyEvent e) {
+  public void keyReleased(KeyEvent e)
+  {
     keys[e.getKeyCode()] = false;
-    
   }
 
   @Override
