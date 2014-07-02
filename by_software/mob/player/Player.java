@@ -2,11 +2,12 @@ package by_software.mob.player;
 
 import by_software.engine.input.Keyboard;
 import by_software.map.Map;
+import by_software.engine.physics.Vector2f;
 
 public class Player{
 
-  private double posX = 2 ,  posY = 2;
-  private double dirX = 1,  dirY = 0;
+  private double pos;
+  private double dir = new Vector2f(1d, 0d);
   private double planeX = 0,  planeY = .66; 
   private double speed = 3 ,rotateSpeed = .5;
   private Keyboard input;
@@ -14,8 +15,7 @@ public class Player{
   private Map map;
   public Player(double x, double y, Keyboard key, Map map)
   {
-    posX = x;
-    posY = y;
+    pos = new Vector2f(x, y);
     input = key;
     timeOld = System.nanoTime();
     this.map = map;
@@ -24,7 +24,7 @@ public class Player{
   public void update()
   {
   
-    double x = 0, y = 0, r = 0;
+    double x = 0, y = 0;
     
     if( input.up )
     {
@@ -72,49 +72,48 @@ public class Player{
   public void moveLocal(double x, double y)
   {
    
-    double angle = Math.atan(dirY/dirX);
+    double angle = Math.atan(dir.getY()/dir.getX());
     double sin = Math.sin(angle);
     double cos = Math.cos(angle);
    // System.out.println(dirY + "  " + dirX + " " + dirY *dirX);
     //might have to do this for Y also
     
-    double movePosX, movePosY;
-    if( dirX <0)
+    Vector2f movePos = new Vector2f();
+    if( dir.getX() <0)
     {
-      movePosX = cos * x - sin * y;
-      movePosY = sin * x + cos * y;
+      movePos.setX(cos * x - sin * y);
+      movePos.setY(sin * x + cos * y);
     }  
     else
     {
-      movePosX = -(cos * x - sin * y);
-      movePosY = -(sin * x + cos * y);
+      movePos.setX( -(cos * x - sin * y) );
+      movePos.setY( -(sin * x + cos * y) );
     }
-    if(map.checkCollision(posX + movePosX, posY))
+    if(map.checkCollision( pos.getX() + movePos.getX(), pos.getY() ))
     {
       movePosX = 0;
     }
-    if(map.checkCollision(posX, posY + movePosY))
+    if(map.checkCollision( pos.getX(), pos.getY() + movePos.getY() ))
     {
       movePosY = 0;
     }
     
-    posX += movePosX;
-    posY += movePosY;
+    pos.add(movePos);
     
-    if(posX < 0)
+    if(pos.getX() < 0)
     {
       posX += map.getMapSizeX();
     }  
-    if(posX > map.getMapSizeX())
+    if(pos.getX() > map.getMapSizeX())
     {
       posX -= map.getMapSizeX();
     }
     
-    if(posY < 0)
+    if(pos.getY() < 0)
     {
       posY += map.getMapSizeY();
     }  
-    if(posY > map.getMapSizeY())
+    if(pos.getY() > map.getMapSizeY())
     {
       posY -= map.getMapSizeY();
     }
@@ -124,8 +123,7 @@ public class Player{
   //move player in world space
   public void moveWorld(double x, double y)
   {
-    posX = x;
-    posY = y;
+    pos.set(x, y);
   }
 
   //Shitty matrix multiplaction 
@@ -133,24 +131,24 @@ public class Player{
   {
     //[ cos(a) -sin(a) ][x]
     //[ sin(a)  cos(a) ][y]
-    double oldDirX = dirX;
-    double oldDirY = dirY;
+    //make a (deep) copy of dir using the Vector copy constructor
+    Vector2f oldDir = new Vector2f(dir);
     double oldPlaneX = planeX;
     double oldPlaneY = planeY;
 
     //rotate player direction
-    dirX = Math.cos(Math.toRadians(angle)) * oldDirX - Math.sin(Math.toRadians(angle)) * oldDirY;
-    dirY = Math.sin(Math.toRadians(angle)) * oldDirX + Math.cos(Math.toRadians(angle)) * oldDirY;
+    dir.setX( Math.cos(Math.toRadians(angle)) * oldDir.getX() - Math.sin(Math.toRadians(angle)) * oldDir.getY() );
+    dir.setY( Math.sin(Math.toRadians(angle)) * oldDir.getX() + Math.cos(Math.toRadians(angle)) * oldDir.getY() );
 
     //rotate screen plane
     planeX = Math.cos(Math.toRadians(angle)) * oldPlaneX - Math.sin(Math.toRadians(angle)) * oldPlaneY;
     planeY = Math.sin(Math.toRadians(angle)) * oldPlaneX + Math.cos(Math.toRadians(angle)) * oldPlaneY;
   }
 
-  public double getPosX()    {return this.posX;}
-  public double getPosY()    {return this.posY;}
-  public double getDirX()    {return this.dirX;}
-  public double getDirY()    {return this.dirY;}
+  public double getPosX()    {return pos.getX();}
+  public double getPosY()    {return pos.getX();}
+  public double getDirX()    {return dir.getX();}
+  public double getDirY()    {return dir.getY();}
   public double getPlaneX()  {return this.planeX;}
   public double getPlaneY()  {return this.planeY;}
 
