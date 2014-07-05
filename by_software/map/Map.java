@@ -7,10 +7,10 @@ import java.util.Scanner;
 
 public class Map{
 
-  private       short[][] map;
-  private       int sizeX, sizeY;    
-  private       Dimension size;   
-  private final String errorLoading = "Failed to load map!";
+  private               short[][] map;
+  private               int       sizeX, sizeY;    
+  private               Dimension size;   
+  private static final  String    ERROR_LOADING_MAP_DEF       = "Failed to load map definition file!";
   
   /**
   *  load a map from a file.
@@ -65,9 +65,8 @@ public class Map{
     }
     catch(IOException e)
     {
-        System.out.print(errorLoading);
+        System.out.print(ERROR_LOADING_MAP_DEF);
     }
-
   }
 
   /**
@@ -87,34 +86,32 @@ public class Map{
 
   }
 
-  public short[][] getMap()  {  return this.map;  }  
-  public short getMapTile(int x,int y)  {  return this.map[x][y];  }
-  public int getMapSizeX()  {  return this.sizeX;  }
-  public int getMapSizeY()  {  return this.sizeY;  }
-  public int getMapSize()  {  return this.sizeX;  }
-  
-  
-  public void printMap()
+  //convert the numbers describing the map to actual tiles
+  public Tile[][] toTiles()
   {
-    //System.out.print(Arrays.deepToString(map));
+
+  }
+  
+  public String printMap()
+  {
+    String result;
+
     for(int i = 0;i < sizeY;i++)
     {
         for(int j = 0;j < sizeX;j++)
       {
-          System.out.print(String.format("%3d", map[j][i]));
+          result += String.format("%3d", map[j][i]);
       }
-      System.out.println();
+      result += "\n";
     }
-
+    return result;
   }
-/*
-  public static void main(String[] args)
-  {  
 
-    Map map = new Map("MapTest");
-    map.printMap();
+  public void printMap()
+  {
+    System.out.println(this);
+  }
 
-   }*/
   public boolean checkCollision(int x, int y)
   {
 	  return map[x][y] != 0;
@@ -124,6 +121,11 @@ public class Map{
   public boolean checkCollision(double x, double y)
   {
 	  return checkCollision((int) x, (int) y);
-  }  
-  
+  }
+
+  public short[][] getMap()             {  return this.map;       }
+  public short getMapTile(int x,int y)  {  return this.map[x][y]; }
+  public int getMapSizeX()              {  return this.sizeX;     }
+  public int getMapSizeY()              {  return this.sizeY;     }
+  public int getMapSize()               {  return this.sizeX;     }
 }

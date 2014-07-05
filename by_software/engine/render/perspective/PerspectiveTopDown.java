@@ -18,6 +18,6 @@ public class PerspectiveTopDown implements Perspective
 
  public void render(Graphics gr, int screenWidth, int screenHidth ,Game game, Player player)
   {
-    //TODO call methods to render Top down
+    //render each tile of the map
   }
 }
