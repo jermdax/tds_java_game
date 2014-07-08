@@ -1,3 +1,5 @@
+package by_software.engine.render.graphics;
+
 public class TexturePack
 {
 	private static        BufferedImage allTdsTiles;

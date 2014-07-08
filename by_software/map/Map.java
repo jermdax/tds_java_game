@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
+import by_software.engine.render.graphics.Tile;
 
 public class Map{
 
@@ -11,6 +12,7 @@ public class Map{
   private               int       sizeX, sizeY;    
   private               Dimension size;   
   private static final  String    ERROR_LOADING_MAP_DEF       = "Failed to load map definition file!";
+  private               Tile[][] tiles;
   
   /**
   *  load a map from a file.
@@ -18,6 +20,7 @@ public class Map{
   public Map(String path)
   {
       readMap(path);
+      tiles = toTiles();
   }
 
   /**
@@ -89,12 +92,24 @@ public class Map{
   //convert the numbers describing the map to actual tiles
   public Tile[][] toTiles()
   {
-
+    int x = 0, y = 0;
+    Tile[][] tiles = new Tile[map.length][map[0].length];
+    for(short[] row : map)
+    {
+      for(short tile : row)
+      {
+        tiles[x][y] = new Tile(map[x][y] != 0);
+        ++y;
+      }
+      ++x;
+      y = 0;
+    }
+    return tiles;
   }
   
-  public String printMap()
+  public String toString()
   {
-    String result;
+    String result = new String();
 
     for(int i = 0;i < sizeY;i++)
     {
@@ -125,6 +140,7 @@ public class Map{
 
   public short[][] getMap()             {  return this.map;       }
   public short getMapTile(int x,int y)  {  return this.map[x][y]; }
+  public Tile[][] getTiles()            {  return tiles;          }
   public int getMapSizeX()              {  return this.sizeX;     }
   public int getMapSizeY()              {  return this.sizeY;     }
   public int getMapSize()               {  return this.sizeX;     }

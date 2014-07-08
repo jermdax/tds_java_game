@@ -73,6 +73,10 @@ public class Keyboard implements KeyListener, MouseMotionListener  {
         game.getWindow().releaseMouse();
       }
     }
+    else if(e.getKeyCode() == KeyEvent.VK_E)
+    {
+      game.swapPerspective();
+    }
     else
     {
       keys[e.getKeyCode()] = true;

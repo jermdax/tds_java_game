@@ -7,8 +7,7 @@ import java.awt.image.BufferedImage;
 
 import by_software.engine.input.Keyboard;
 import by_software.engine.render.graphics.GameWindow;
-import by_software.engine.render.perspective.Perspective;
-import by_software.engine.render.perspective.PerspectiveFirstPerson;
+import by_software.engine.render.perspective.*;
 import by_software.map.Map;
 import by_software.mob.player.Player;
 
@@ -35,6 +34,7 @@ public class Game implements Runnable
   private BufferedImage  background;
   //Prespective to render
   private Perspective perspective;
+  private Perspective otherPerspective;
   //Player
   private Player player;
   //Map
@@ -63,7 +63,15 @@ public class Game implements Runnable
     map = new Map("by_software/map/MapTest.map");
     player = new Player(2,2,key,map);
     perspective = new PerspectiveFirstPerson(map);
+    otherPerspective = new PerspectiveTopDown(map);
     run();
+  }
+
+  public void swapPerspective()
+  {
+    Perspective tmp = perspective;
+    perspective = otherPerspective;
+    otherPerspective = tmp;
   }
 
   public void run()
