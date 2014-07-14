@@ -5,83 +5,83 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.Point;
 import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
-import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
-import by_software.engine.input.Keyboard;
-import by_software.engine.render.graphics.GameWindow;
+import by_software.engine.render.graphics.TexturePack;
 
 public class MapMaker {
   
-  private static int sidedBarWidth = 302,tileSize = 32;
+  private static int sidedBarWidth = 302,tileSize = 16;
   private int numTiles;
   private int perferedHeight = 3000;
-  private boolean grid = true;
-  private boolean gridOver = true;
+
+ 
   private int sizeX, sizeY;
-  private GameWindow gw;
-  private Keyboard input;
   private JFrame  frame;
-  private boolean paintHover = false;
   private JPanel panel, sidePanel;
   private Canvas canvas;
-  
-  
-  
+  private OptionPanel optionPanel;
   private MapTile selectedTile;
+  private MapPanel mapPanel;
+  private ScrollPane sP;
   
-  private Point   frameLoc;
-  private short[][] map;
+  
+  private MapTile defaultTile;
+  private TexturePack texturePack;
+  private SelectButton[] selectButtons;
+  private static String path = "";
+
+  static int  maxX  =100,maxY=100 ; 
+
   public static void main(String[] args)
   {
-  
-  
-  
-  MapMaker m = new MapMaker("Map Maker",25,25,true,true);
-  
+	TexturePack t =  new TexturePack("by_software/map/sprites/",new Dimension(16,16),new Dimension(32,32));  
+    
+	MapMaker m = new MapMaker("Map Maker","D:/work/by_software/src/",40,41,t);
   }
   
-  public MapMaker(String title,int x, int y,boolean grid, boolean gridOver)
+
+  public MapMaker(String title, String path, int x, int y, TexturePack texturePack)
   {
     this.sizeX = x;
     this.sizeY = y;
-    Dimension canvasSize = new Dimension(x * tileSize,y * tileSize); 
-    map = new short[x][y];
-    this.grid = grid;
-    this.gridOver = gridOver;  
-
+    this.path = path;
+    this.defaultTile = MapTile.Void;
+    this.selectedTile = MapTile.Void;
+  	this.tileSize = tileSize;
+  	this.texturePack = texturePack;
+  	MapTile.loadAllTiles(texturePack);
+  	
+    Dimension scrollMapSize =new Dimension(x > maxX?maxX * tileSize :x * (tileSize),
+											y>maxY?maxY * tileSize :y * (tileSize) );
+    //map = new short[x][y];
   
-  //TODO load in tile enums(?) find number of tiles and set perfered hieght of sidepanel 
+    //TODO load in tile enums(?) find number of tiles and set perfered hieght of sidepanel 
   
   
     //set up the JFrame
     frame = new JFrame(title);
-    frame.setSize(sizeX * tileSize + sidedBarWidth,sizeY * tileSize);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setLocationRelativeTo(null);
-    // frame.setResizable(false);
     frame.setIgnoreRepaint(true);
-
+    
+    
     panel = new JPanel();
     panel.setLayout(new BorderLayout());
     
@@ -96,176 +96,152 @@ public class MapMaker {
     sidePanel.setLayout(new FlowLayout());
     sidePanel.setPreferredSize(new Dimension(sidedBarWidth,perferedHeight));
    
-    JScrollPane sideSP =  new JScrollPane(sidePanel);
-    sideSP.setPreferredSize(new Dimension(sidedBarWidth + 20,frame.getHeight()));
-    sideSP.setVerticalScrollBarPolicy( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-  
+    JScrollPane buttonPane =  new JScrollPane(sidePanel);
+    buttonPane.setPreferredSize(new Dimension(sidedBarWidth + 20,frame.getHeight()));
+    buttonPane.setVerticalScrollBarPolicy( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+    selectButtons = new SelectButton[MapTile.values().length]; 
+    for(int i=0;i < MapTile.values().length ;i++ )
+    {	 
+    	 selectButtons[i]  = new SelectButton(MapTile.values()[i]);
+    	 sidePanel.add(selectButtons[i]);
+    }     
      
-     /// test Shit######################################
-     for(int i=0;i < 50 ;i++ )
-     {
-       SelectButton button1 = new SelectButton(MapTile.Void);
-       sidePanel.add(button1);
-       SelectButton button2 = new SelectButton(MapTile.Wall);
-       sidePanel.add(button2);
-       SelectButton button12 = new SelectButton(MapTile.Void);
-       sidePanel.add(button12);
-       SelectButton button22 = new SelectButton(MapTile.Wall);
-       sidePanel.add(button22);
-    }
-     //#######################################
+     JPanel sidePanel = new JPanel();
+     sidePanel.setLayout(new BorderLayout());
+     sidePanel.add(buttonPane,BorderLayout.CENTER);
      
+     optionPanel = new OptionPanel();
+     sidePanel.add(optionPanel,BorderLayout.NORTH);
      
      
+     sP =  new ScrollPane();
+     sP.setPreferredSize(scrollMapSize);
      
-     
-     
-     ScrollPane sP =  new ScrollPane();
-     sP.setPreferredSize(canvasSize);
-     
-     MapPanel mapPanel = new MapPanel(50,50); 
+     mapPanel = new MapPanel(x,y,MapTile.getTopDownSize(),MapTile.Void); 
      
      sP.add(mapPanel);
-     
-     panel.add(sideSP,BorderLayout.WEST);
+     panel.add(sidePanel,BorderLayout.WEST);
      panel.add(sP,BorderLayout.CENTER);
      frame.add(panel);
      frame.pack();
      frame.setVisible(true);
-     frameLoc = frame.getLocationOnScreen();
+     frame.repaint();
 
-     frame.addComponentListener(new ComponentAdapter() {
-       public void componentMoved(ComponentEvent e)
-       {
-         frameLoc = frame.getLocationOnScreen();
-       }
-     });
-
-  
   }
-  
 
-  private class MapLabel extends JLabel implements MouseListener{
-  
-  int tileID = 0;
-  
-  public MapLabel()
+  public void importMap(String name)
   {
-    super();
-    setPreferredSize(new Dimension(32,32));
-    setBackground(Color.WHITE);
-    //setIcon(new ImageIcon(MapTile.Void.getSprite()));
-    setOpaque(true);
-    setEnabled(true);
-    setVisible(true);
-    addMouseListener(this);
-    setBorder(BorderFactory.createLineBorder(Color.black));
-    
+	  mapPanel.loadMap(name);
+	  mapPanel.revalidate();
   }
   
-  public void setNewTile(MapTile tile)
+  public void exportMap(String name)
   {
-    setIcon(new ImageIcon(tile.getSprite()));
-    tileID = tile.ordinal();
-  }
-  
-  @Override
-  public void mouseClicked(MouseEvent arg0) {}
+	  try {
+		PrintWriter writer = new PrintWriter(name + ".map","UTF-8");
 
-  @Override
-  public void mouseEntered(MouseEvent e) {
-    // TODO Auto-generated method stub
-    if(paintHover)
-    {
-    setNewTile(selectedTile);
-
-    }
+		
+		writer.print(mapPanel.toString());
+		
+		writer.close();
+	} catch (FileNotFoundException e) {	
+		e.printStackTrace();
+	} catch (UnsupportedEncodingException e) {
+		e.printStackTrace();
+	}
   }
 
-  @Override
-  public void mouseExited(MouseEvent e) {}
-
-  @Override
-  public void mousePressed(MouseEvent arg0) {
-    // TODO Auto-generated method stub
-    setNewTile(selectedTile);
-    paintHover = true;
-    
-  }
-
-  @Override
-  public void mouseReleased(MouseEvent arg0) {
-    // TODO Auto-generated method stub
-    paintHover = false;
-  }
-  }
-  
   private class SelectButton extends JButton implements ActionListener{
   
-  MapTile tile;
-  public SelectButton(MapTile tile)
-  {
-  super();
-  
-  this.tile = tile;
-  setVisible(true);
-  setPreferredSize(new Dimension(32,32));
-  setIcon(new ImageIcon(tile.getSprite()));
-  addActionListener(this);
+	  MapTile tile;
+	  public SelectButton(MapTile tile)
+	  {
+		super();
+	  
+	  	this.tile = tile;
+	  	setVisible(true);
+	  	setPreferredSize(MapTile.getTopDownSize());
+	  	setIcon(new ImageIcon(tile.getTopSprite()));
+	  	addActionListener(this);
+	  }
+	  
+	  public void actionPerformed(ActionEvent e) 
+	  {
+	 
+	    mapPanel.setSelectedTile(tile);
+	    optionPanel.update();
+	  }
   }
   
-  public void actionPerformed(ActionEvent e) 
-  {
-    selectedTile = tile;
-  }
-  }
-  
-  private class MapPanel extends JPanel {
-  
-  private MapLabel[][] map;
-  
-  public MapPanel(int x,int y)
-  {
-    super();
-    this.setLayout(new GridLayout(x,y));
-    map = new MapLabel[x][y];
-    for(int i = 0; i < x; i++ )
+  public class OptionPanel extends JPanel{
+
+    MapTile tile;
+    JLabel tileLabel;
+    JTextArea textArea;
+    JPanel selectedPanel;
+    
+    private OptionPanel()
     {
-    for(int j = 0 ; j < y; j++)
-    {
-      map[i][j] = new MapLabel();
-      this.add(map[i][j]);
-    }
+     
+      setLayout(new BorderLayout());
+
+      add(new ExportPanel(),BorderLayout.SOUTH);
+
+      
+      selectedPanel = new JPanel();
+      selectedPanel.setLayout(new BorderLayout());
+     
+      textArea = new  JTextArea();
+      textArea.setText(selectedTile.toString() + "\n" + selectedTile.getMessage() + "\n" +  selectedTile.isSolid());
+      textArea.setVisible(true);
+
+      tileLabel = new JLabel();
+      tileLabel.setIcon(new ImageIcon(selectedTile.getTopSprite()));
+      tileLabel.setVisible(true);
+      
+      selectedPanel.add(textArea,BorderLayout.CENTER);
+      selectedPanel.add(tileLabel,BorderLayout.WEST);
+   
+      add(selectedPanel,BorderLayout.NORTH);
     }
     
-  }
-
-  
-  }
-  //TODO implemt a MapTtle Interface so outer enums can be used
-  private enum MapTile{
-  Void("Void","by_software/map/sprites/01.png"),
-  Wall("wall","by_software/map/sprites/02.png");
-         
-  private BufferedImage sprite;
-  
-  
-  private MapTile(String name, String path)
-  {
-    try {
-    sprite = ImageIO.read(new File(path));
-    } catch (IOException e) {
-     e.printStackTrace();
+    public void update()
+    {
+      tileLabel.setIcon(new ImageIcon(selectedTile.getTopSprite()));
+      textArea.setText(selectedTile.toString() + "\n" + selectedTile.getMessage() + "\n" +  selectedTile.isSolid());
     }
- 
-  }
-  
-  public BufferedImage getSprite()
-  {
-    return this.sprite;
-    
   }
 
+
+  private class ExportPanel extends JPanel{
+	
+	  
+	  JTextField mapName;
+	  
+	  public ExportPanel()
+	  {
+		
+		  mapName = new JTextField(12);
+		  
+		  add(new JButton(new AbstractAction("Export") {
+
+
+	        public void actionPerformed(ActionEvent e) 
+	        {
+	           exportMap(mapName.getText());
+	        }
+		  }));
+		  
+		  add(new JButton(new AbstractAction("Import") {
+
+
+		        public void actionPerformed(ActionEvent e) 
+		        {
+		           importMap(mapName.getText());
+		        }
+			  }));
+		  add(mapName);
+	  }
   }
-  
 }
