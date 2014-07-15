@@ -51,9 +51,9 @@ public class MapMaker {
 
   public static void main(String[] args)
   {
-	TexturePack t =  new TexturePack("by_software/map/sprites/",new Dimension(16,16),new Dimension(32,32));  
+    TexturePack t =  new TexturePack("by_software/map/sprites/",new Dimension(16,16),new Dimension(32,32));  
     
-	MapMaker m = new MapMaker("Map Maker","D:/work/by_software/src/",40,41,t);
+    MapMaker m = new MapMaker("Map Maker","D:/work/by_software/src/",40,41,t);
   }
   
 
@@ -62,14 +62,14 @@ public class MapMaker {
     this.sizeX = x;
     this.sizeY = y;
     this.path = path;
-    this.defaultTile = MapTile.Void;
-    this.selectedTile = MapTile.Void;
-  	this.tileSize = tileSize;
-  	this.texturePack = texturePack;
-  	MapTile.loadAllTiles(texturePack);
-  	
+    this.defaultTile = MapTile.VOID;
+    this.selectedTile = MapTile.VOID;
+    this.tileSize = tileSize;
+    this.texturePack = texturePack;
+    MapTile.loadAllTiles(texturePack);
+    
     Dimension scrollMapSize =new Dimension(x > maxX?maxX * tileSize :x * (tileSize),
-											y>maxY?maxY * tileSize :y * (tileSize) );
+                      y>maxY?maxY * tileSize :y * (tileSize) );
     //map = new short[x][y];
   
     //TODO load in tile enums(?) find number of tiles and set perfered hieght of sidepanel 
@@ -102,9 +102,9 @@ public class MapMaker {
 
     selectButtons = new SelectButton[MapTile.values().length]; 
     for(int i=0;i < MapTile.values().length ;i++ )
-    {	 
-    	 selectButtons[i]  = new SelectButton(MapTile.values()[i]);
-    	 sidePanel.add(selectButtons[i]);
+    {   
+       selectButtons[i]  = new SelectButton(MapTile.values()[i]);
+       sidePanel.add(selectButtons[i]);
     }     
      
      JPanel sidePanel = new JPanel();
@@ -118,7 +118,7 @@ public class MapMaker {
      sP =  new ScrollPane();
      sP.setPreferredSize(scrollMapSize);
      
-     mapPanel = new MapPanel(x,y,MapTile.getTopDownSize(),MapTile.Void); 
+     mapPanel = new MapPanel(x,y,MapTile.getTopDownSize(),defaultTile); 
      
      sP.add(mapPanel);
      panel.add(sidePanel,BorderLayout.WEST);
@@ -132,46 +132,46 @@ public class MapMaker {
 
   public void importMap(String name)
   {
-	  mapPanel.loadMap(name);
-	  mapPanel.revalidate();
+    mapPanel.loadMap(name);
+    mapPanel.revalidate();
   }
   
   public void exportMap(String name)
   {
-	  try {
-		PrintWriter writer = new PrintWriter(name + ".map","UTF-8");
+    try {
+    PrintWriter writer = new PrintWriter(name + ".map","UTF-8");
 
-		
-		writer.print(mapPanel.toString());
-		
-		writer.close();
-	} catch (FileNotFoundException e) {	
-		e.printStackTrace();
-	} catch (UnsupportedEncodingException e) {
-		e.printStackTrace();
-	}
+    
+    writer.print(mapPanel.toString());
+    
+    writer.close();
+  } catch (FileNotFoundException e) {  
+    e.printStackTrace();
+  } catch (UnsupportedEncodingException e) {
+    e.printStackTrace();
+  }
   }
 
   private class SelectButton extends JButton implements ActionListener{
   
-	  MapTile tile;
-	  public SelectButton(MapTile tile)
-	  {
-		super();
-	  
-	  	this.tile = tile;
-	  	setVisible(true);
-	  	setPreferredSize(MapTile.getTopDownSize());
-	  	setIcon(new ImageIcon(tile.getTopSprite()));
-	  	addActionListener(this);
-	  }
-	  
-	  public void actionPerformed(ActionEvent e) 
-	  {
-	 
-	    mapPanel.setSelectedTile(tile);
-	    optionPanel.update();
-	  }
+    MapTile tile;
+    public SelectButton(MapTile tile)
+    {
+    super();
+    
+      this.tile = tile;
+      setVisible(true);
+      setPreferredSize(MapTile.getTopDownSize());
+      setIcon(new ImageIcon(tile.getTopSprite()));
+      addActionListener(this);
+    }
+    
+    public void actionPerformed(ActionEvent e) 
+    {
+   
+      mapPanel.setSelectedTile(tile);
+      optionPanel.update();
+    }
   }
   
   public class OptionPanel extends JPanel{
@@ -215,33 +215,33 @@ public class MapMaker {
 
 
   private class ExportPanel extends JPanel{
-	
-	  
-	  JTextField mapName;
-	  
-	  public ExportPanel()
-	  {
-		
-		  mapName = new JTextField(12);
-		  
-		  add(new JButton(new AbstractAction("Export") {
+  
+    
+    JTextField mapName;
+    
+    public ExportPanel()
+    {
+    
+      mapName = new JTextField(12);
+      
+      add(new JButton(new AbstractAction("Export") {
 
 
-	        public void actionPerformed(ActionEvent e) 
-	        {
-	           exportMap(mapName.getText());
-	        }
-		  }));
-		  
-		  add(new JButton(new AbstractAction("Import") {
+          public void actionPerformed(ActionEvent e) 
+          {
+             exportMap(mapName.getText());
+          }
+      }));
+      
+      add(new JButton(new AbstractAction("Import") {
 
 
-		        public void actionPerformed(ActionEvent e) 
-		        {
-		           importMap(mapName.getText());
-		        }
-			  }));
-		  add(mapName);
-	  }
+            public void actionPerformed(ActionEvent e) 
+            {
+               importMap(mapName.getText());
+            }
+        }));
+      add(mapName);
+    }
   }
 }

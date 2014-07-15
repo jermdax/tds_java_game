@@ -1,12 +1,12 @@
 package by_software.engine.render.perspective;
 
-import java.awt.Graphics;
 import java.awt.Color;
+import java.awt.Graphics;
 
 import by_software.Game;
 import by_software.map.Map;
+import by_software.map.MapTile;
 import by_software.mob.player.Player;
-import by_software.engine.render.graphics.Tile;
 
 public class PerspectiveTopDown implements Perspective
 {
@@ -20,7 +20,7 @@ public class PerspectiveTopDown implements Perspective
 
  public void render(Graphics gr, int screenWidth, int screenHidth ,Game game, Player player)
   {
-    Tile[][] mapTiles = worldMap.getTiles();
+    MapTile[][] mapTiles = worldMap.getTiles();
     for(int x = 0; x < mapTiles.length; x++)
     {
       for(int y = 0; y < mapTiles[x].length; y++)
@@ -29,14 +29,14 @@ public class PerspectiveTopDown implements Perspective
           gr.setColor(Color.RED);
         else
           gr.setColor(Color.GRAY);
-        gr.fillRect(x*Tile.SIZE, y*Tile.SIZE, Tile.SIZE, Tile.SIZE);
+        gr.fillRect(x*MapTile.getTopDownSize().width, y*MapTile.getTopDownSize().height,MapTile.getTopDownSize().width, MapTile.getTopDownSize().height);
         
         //drawGrid
         gr.setColor(Color.CYAN);
-        gr.drawRect(x*Tile.SIZE, y*Tile.SIZE, Tile.SIZE, Tile.SIZE);
+        gr.drawRect(x*MapTile.getTopDownSize().width, y*MapTile.getTopDownSize().height, MapTile.getTopDownSize().width, MapTile.getTopDownSize().height);
       }
       gr.setColor(Color.GREEN);
-      gr.fillOval((int)(player.getPosX()*Tile.SIZE)-4, (int)(player.getPosY()*Tile.SIZE)-4, 18, 18);
+      gr.fillOval((int)(player.getPosX()*MapTile.getTopDownSize().width)-4, (int)(player.getPosY()*MapTile.getTopDownSize().height)-4, 18, 18);
     }
   }
 

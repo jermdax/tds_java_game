@@ -38,16 +38,17 @@ public class TexturePack
  
   public static void main(String[] args)
   {
-	  TexturePack t =  new TexturePack("D:/work/by_software/src/by_software/map/sprites/",new Dimension(32,32),new Dimension(16,16));
+	  TexturePack t =  new TexturePack("D:/work/by_software/src/by_software/map/sprites/",new Dimension(16,16),new Dimension(16,16));
 	  
-	  
-	  MapTile.loadAllTiles(t);
+	  System.out.print(t.getFpsYTexture(0));
+	  MapTile.setTexturePack(t);
+	  MapTile.loadAllTiles();
 	  
 	  
 	  
 	    JFrame frame = new JFrame();
 		JLabel panel = new JLabel();
-		panel.setIcon(new ImageIcon(MapTile.Void.getTopSprite()));
+		panel.setIcon(new ImageIcon(MapTile.VOID.getTopSprite()));
 		frame.add(panel);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -65,7 +66,7 @@ public class TexturePack
 	  try {
 		allTdsTiles = ImageIO.read(new File(path + topDownFileName));
 	
-	  //allFpsTextures = ImageIO.read(new File(path + fpsFileName));
+		allFpsTextures = ImageIO.read(new File(path + fpsFileName));
 	  //allMobs = ImageIO.read(new File(path + mobFileName));
 	  //allWeps = ImageIO.read(new File(path + weaponFileName));
 		
@@ -121,7 +122,7 @@ public class TexturePack
   public BufferedImage[] getTextureSet(int id)
   {
 	  
-	  BufferedImage[] set = {getSprite(id)};//,getFpsXTexture(id),getFpsYTexture(id)};
+	  BufferedImage[] set = {getSprite(id), getFpsXTexture(id), getFpsYTexture(id)};
 	  return set;
   }
   public Dimension getTopDownSize(){return topDownSize;}

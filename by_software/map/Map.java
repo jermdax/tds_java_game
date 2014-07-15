@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
-import by_software.engine.render.graphics.Tile;
 
 public class Map{
 
@@ -12,7 +11,7 @@ public class Map{
   private               int       sizeX, sizeY;    
   private               Dimension size;   
   private static final  String    ERROR_LOADING_MAP_DEF       = "Failed to load map definition file!";
-  private               Tile[][] tiles;
+  private               MapTile[][] tiles;
   
   /**
   *  load a map from a file.
@@ -90,15 +89,15 @@ public class Map{
   }
 
   //convert the numbers describing the map to actual tiles
-  public Tile[][] toTiles()
+  public MapTile[][] toTiles()
   {
     int x = 0, y = 0;
-    Tile[][] tiles = new Tile[map.length][map[0].length];
+    MapTile[][] tiles = new MapTile[map.length][map[0].length];
     for(short[] row : map)
     {
       for(short tile : row)
       {
-        tiles[x][y] = new Tile(map[x][y] != 0);
+        tiles[x][y] = MapTile.getMapTile(map[x][y]);
         ++y;
       }
       ++x;
@@ -106,6 +105,7 @@ public class Map{
     }
     return tiles;
   }
+  
   
   public String toString()
   {
@@ -115,7 +115,7 @@ public class Map{
     {
         for(int j = 0;j < sizeX;j++)
       {
-          result += String.format("%3d", map[j][i]);
+          result += String.format("%4d", map[j][i]);
       }
       result += "\n";
     }
@@ -129,18 +129,18 @@ public class Map{
 
   public boolean checkCollision(int x, int y)
   {
-	  return map[x][y] != 0;
-	  
+    return map[x][y] != 0;
+    
   }
 
   public boolean checkCollision(double x, double y)
   {
-	  return checkCollision((int) x, (int) y);
+    return checkCollision((int) x, (int) y);
   }
 
   public short[][] getMap()             {  return this.map;       }
   public short getMapTile(int x,int y)  {  return this.map[x][y]; }
-  public Tile[][] getTiles()            {  return tiles;          }
+  public MapTile[][] getTiles()         {  return tiles;          }
   public int getMapSizeX()              {  return this.sizeX;     }
   public int getMapSizeY()              {  return this.sizeY;     }
   public int getMapSize()               {  return this.sizeX;     }
