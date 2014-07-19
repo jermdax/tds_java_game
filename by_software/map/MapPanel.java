@@ -21,7 +21,7 @@ public class MapPanel extends JPanel {
     private int sizeX,sizeY;
     private Dimension tileSize;
     private MapTile defaultTile;
-    private MapTile selectedTile = MapTile.VOID;
+    private MapTile selectedTile = MapTile.FLOOR;
     
     public MapPanel(String name, Dimension tileSize, MapTile defaultTile)
     {
@@ -36,13 +36,16 @@ public class MapPanel extends JPanel {
     {
       super();
       this.defaultTile = defaultTile;
-    this.tileSize = tileSize;
+      this.tileSize = tileSize;
       this.setLayout(new GridLayout(y,x));
+      this.sizeX = x;
+      this.sizeY = y;
       map = new MapLabel[x][y];
-      for(int i = 0; i < x; i++ )
+      for(int j = 0 ; j < y; j++)
       {
-        for(int j = 0 ; j < y; j++)
+        for(int i = 0; i < x; i++ )
         {
+        
           map[i][j] = new MapLabel();
           this.add(map[i][j]);
         }
@@ -92,6 +95,7 @@ public class MapPanel extends JPanel {
       {
         for(int j = 0;j<sizeX;j++)
         {
+
           string += map[j][i].getTile().ordinal() + " ";
                 
         }

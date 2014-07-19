@@ -7,8 +7,12 @@ import java.awt.image.BufferedImage;
 
 import by_software.engine.input.Keyboard;
 import by_software.engine.render.graphics.GameWindow;
-import by_software.engine.render.perspective.*;
+import by_software.engine.render.graphics.TexturePack;
+import by_software.engine.render.perspective.Perspective;
+import by_software.engine.render.perspective.PerspectiveFirstPerson;
+import by_software.engine.render.perspective.PerspectiveTopDown;
 import by_software.map.Map;
+import by_software.map.MapTile;
 import by_software.mob.player.Player;
 
 
@@ -40,6 +44,8 @@ public class Game implements Runnable
   //Map
   private Map map;
   //keyboard input
+  private TexturePack textures;
+  
   public Keyboard key;
 
   //loop timing stuff
@@ -60,7 +66,9 @@ public class Game implements Runnable
     window = new GameWindow(TITLE, WINDOW_SIZE,key);
     bStrat = window.getBufferStrategy();
     isRunning = true;
-    map = new Map("by_software/map/MapTest.map");
+    map = new Map("D:/work/by_software/src/by_software/map/MapTest.map");
+    textures =  new TexturePack("by_software/map/sprites/",new Dimension(16,16),new Dimension(8,16));
+    MapTile.loadAllTiles(textures);
     player = new Player(2,2,key,map);
     perspective = new PerspectiveFirstPerson(map);
     otherPerspective = new PerspectiveTopDown(map);

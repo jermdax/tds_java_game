@@ -1,3 +1,5 @@
+package by_software.engine.networking.server;
+
 public class Server
 {
 	private static int connectedPlayers = 0;

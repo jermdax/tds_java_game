@@ -98,7 +98,7 @@ public class PerspectiveFirstPerson implements Perspective
           side = 1;
         }
         //Check if ray has hit a wall
-        if (worldMap.getMapTile(mapX,mapY) > 0) hit = 1;
+        if (worldMap.getMapTile(mapX,mapY).isWall()) hit = 1;
       } 
 
 
@@ -128,21 +128,24 @@ public class PerspectiveFirstPerson implements Perspective
       
 
       Color color;
-      switch(worldMap.getMapTile(mapX,mapY))
+      switch(worldMap.getMapTile(mapX,mapY).ordinal())
       {
-        case 1 : 
+        case 19 : 
           color = Color.RED;
           break; 
-        case 2 : 
+        case 14 : 
           color = Color.GREEN;
           break;
-        case 3 : 
+        case 17 : 
           color = Color.YELLOW;
           break;
-        case 4 : 
-          color = Color.ORANGE;
+        case 18 : 
+          color = Color.BLUE;
           break;
-        default: color = Color.BLUE;
+        case 13 : 
+            color = Color.WHITE;
+            break;
+        default: color = Color.cyan;
 
 
       }

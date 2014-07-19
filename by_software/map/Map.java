@@ -38,6 +38,7 @@ public class Map{
       map[i][0] = map[i][sizeY - 1] = 1;
       map[0][i] = map[sizeY - 1][i] = 1;
     }
+    tiles = toTiles();
   }
 
   /**
@@ -129,8 +130,7 @@ public class Map{
 
   public boolean checkCollision(int x, int y)
   {
-    return map[x][y] != 0;
-    
+    return tiles[x][y].isSolid() ;
   }
 
   public boolean checkCollision(double x, double y)
@@ -139,7 +139,7 @@ public class Map{
   }
 
   public short[][] getMap()             {  return this.map;       }
-  public short getMapTile(int x,int y)  {  return this.map[x][y]; }
+  public MapTile getMapTile(int x,int y){  return this.tiles[x][y];}
   public MapTile[][] getTiles()         {  return tiles;          }
   public int getMapSizeX()              {  return this.sizeX;     }
   public int getMapSizeY()              {  return this.sizeY;     }
