@@ -52,9 +52,10 @@ public class MapMaker {
 
   public static void main(String[] args)
   {
-    TexturePack t =  new TexturePack("by_software/map/sprites/",new Dimension(16,16),new Dimension(8,16));  
-	 // TexturePack t =  new TexturePack("D:/work/by_software/src/by_software/map/sprites/",new Dimension(16,16),new Dimension(8,16)); 
-    MapMaker m = new MapMaker("Map Maker","D:/work/by_software/src/",25,25,t);
+    TexturePack t =  new TexturePack("by_software/map/sprites/",new Dimension(16,16),new Dimension(8,16)); 
+    
+  //TexturePack t =  new TexturePack("D:/work/by_software/src/by_software/map/sprites/",new Dimension(16,16),new Dimension(8,16)); 
+    MapMaker m = new MapMaker("Map Maker","D:/work/by_software/src/",40,40,t);
   }
   
 
@@ -62,7 +63,6 @@ public class MapMaker {
   {
     this.sizeX = x;
     this.sizeY = y;
-    this.path = path;
     this.defaultTile = MapTile.FLOOR;
     this.selectedTile = MapTile.FLOOR;
     this.tileSize = texturePack.getTopDownSize();
@@ -85,12 +85,7 @@ public class MapMaker {
     
     panel = new JPanel();
     panel.setLayout(new BorderLayout());
-    
-    sidePanel = new JPanel();
-    sidePanel.setBackground(Color.lightGray);
-     
-   
-    
+
     
     sidePanel = new JPanel();
     sidePanel.setBackground(Color.lightGray);

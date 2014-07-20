@@ -12,56 +12,59 @@ public class MapTile{
   
   private static MapTile[] tiles; 
   
-  public static final MapTile WALL_TOP_LEFT = new MapTile("wall","",true,true,0,0),
-                              WALL_TOP_CENTER = new MapTile("wall","",true,true,1,0),
-                              WALL_TOP_RIGHT = new MapTile("wall","",true,true,2,0), 
+  public static final MapTile WALL_TOP_LEFT = new MapTile("wall","",true,true,true,true,0,0),
+                              WALL_TOP_CENTER = new MapTile("wall","",true,true,true,true,1,0),
+                              WALL_TOP_RIGHT = new MapTile("wall","",true,true,true,true,2,0), 
                               
-                              WALL_CENTER_LEFT = new MapTile("wall","",true,true,0,1),
-                              WALL_CENTER_CENTER = new MapTile("wall","",true,true,1,1),
-                              WALL_CENTER_RIGHT = new MapTile("wall","",true,true,2,1), 
+                              WALL_CENTER_LEFT = new MapTile("wall","",true,true,true,true,0,1),
+                              WALL_CENTER_CENTER = new MapTile("wall","",true,true,true,true,1,1),
+                              WALL_CENTER_RIGHT = new MapTile("wall","",true,true,true,true,2,1), 
                               
-                              WALL_BOTTOM_LEFT = new MapTile("wall","",true,true,0,2),
-                              WALL_BOTTOM_CENTER = new MapTile("wall","",true,true,1,2),
-                              WALL_BOTTOM_RIGHT = new MapTile("wall","",true,true,2,2), 
+                              WALL_BOTTOM_LEFT = new MapTile("wall","",true,true,true,true,0,2),
+                              WALL_BOTTOM_CENTER = new MapTile("wall","",true,true,true,true,1,2),
+                              WALL_BOTTOM_RIGHT = new MapTile("wall","",true,true,true,true,2,2), 
                               
-                              WALL_END_LEFT = new MapTile("wall","",true,true,3,2),
-                              WALL_END_RIGHT = new MapTile("wall","",true,true,4,2),
+                              WALL_END_LEFT = new MapTile("wall","",true,true,true,true,3,2),
+                              WALL_END_RIGHT = new MapTile("wall","",true,true,true,true,4,2),
                               
-                              WALL_END_TOP = new MapTile("wall","",true,true,3,3),
-                              WALL_END_BOTTOM = new MapTile("wall","",true,true,4,3),
+                              WALL_END_TOP = new MapTile("wall","",true,true,true,true,3,3),
+                              WALL_END_BOTTOM = new MapTile("wall","",true,true,true,true,4,3),
                               
-                              WALL_PILLER = new MapTile("wall","",true,true,0,3),
-                       		  WALL_VERTICAL = new MapTile("wall","",true,true,1,3),
-                              WALL_HORIZONTAL = new MapTile("wall","",true,true,2,3),
-                              WALL_4_CONNECTOR = new MapTile("wall","",true,true,7,0),
+                              WALL_PILLER = new MapTile("wall","",true,true,true,true,0,3),
+                              WALL_VERTICAL = new MapTile("wall","",true,true,true,true,1,3),
+                              WALL_HORIZONTAL = new MapTile("wall","",true,true,true,true,2,3),
+                              WALL_4_CONNECTOR = new MapTile("wall","",true,true,true,true,7,0),
                               
-                              WALL_BLOCK = new MapTile("wall","",true,true,0,7),
-                              WALL_BLOCK_BLUE = new MapTile("wall","",true,true,1,7),
-                              WALL_BLOCK_RED = new MapTile("wall","",true,true,2,7),
+                              WALL_BLOCK = new MapTile("wall","",true,true,true,false,0,7),
+                              WALL_BLOCK_BLUE = new MapTile("wall","",true,true,true,false,1,7),
+                              WALL_BLOCK_RED = new MapTile("wall","",true,true,true,false,2,7),
                               
                               
                               
-                              WALL_6_CONNECTOR_0 = new MapTile("wall","",true,true,3,0), 
-                              WALL_6_CONNECTOR_90 = new MapTile("wall","",true,true,4,0),  
-                              WALL_6_CONNECTOR_180 = new MapTile("wall","",true,true,4,1), 
-                              WALL_6_CONNECTOR_270 = new MapTile("wall","",true,true,3,1), 
+                              WALL_7_CONNECTOR_0 = new MapTile("wall","7",true,true,true,true,3,0), 
+                              WALL_7_CONNECTOR_90 = new MapTile("wall","7",true,true,true,true,4,0),  
+                              WALL_7_CONNECTOR_180 = new MapTile("wall","7",true,true,true,true,4,1), 
+                              WALL_7_CONNECTOR_270 = new MapTile("wall","7",true,true,true,true,3,1), 
                               
-                              WALL_L_CONNECTOR_0 = new MapTile("wall","",true,true,5,0), 
-                              WALL_L_CONNECTOR_90  = new MapTile("wall","",true,true,6,0),  
-                              WALL_L_CONNECTOR_180  = new MapTile("wall","",true,true,6,1),
-  							  WALL_L_CONNECTOR_270  = new MapTile("wall","",true,true,5,1),
+                              WALL_L_CONNECTOR_0 = new MapTile("wall","L",true,true,true,true,5,0), 
+                              WALL_L_CONNECTOR_90  = new MapTile("wall","L",true,true,true,true,6,0),  
+                              WALL_L_CONNECTOR_180  = new MapTile("wall","L",true,true,true,true,6,1),
+                              WALL_L_CONNECTOR_270  = new MapTile("wall","L",true,true,true,true,5,1),
                               
-  								WALL_T_CONNECTOR_0 = new MapTile("wall","",true,true,5,2), 
-  								WALL_T_CONNECTOR_90  = new MapTile("wall","",true,true,6,2),  
-  								WALL_T_CONNECTOR_180  = new MapTile("wall","",true,true,6,3),
-  								WALL_T_CONNECTOR_270  = new MapTile("wall","",true,true,5,3),
+                              WALL_T_CONNECTOR_0 = new MapTile("wall","T",true,true,true,true,5,2), 
+                              WALL_T_CONNECTOR_90  = new MapTile("wall","T",true,true,true,true,5,3),
+                              WALL_T_CONNECTOR_180  = new MapTile("wall","T",true,true,true,true,6,2),
+                              WALL_T_CONNECTOR_270  = new MapTile("wall","T",true,true,true,true,6,3),
+                    
+                  
+                  
   
-  								FLOOR = new MapTile("","",false,false,0,4),
-  								FLOOR_Dont_Know = new MapTile("","",false,false,0,6),
-			  
-  								HILLMARKER_OFF = new MapTile("HillMarker","",false,false,1,4),
-  								HILLMARKER_BLUE = new MapTile("","",false,false,0,5),
-  								HILLMARKER_RED = new MapTile("","",false,false,1,5);
+                              FLOOR = new MapTile("","",false,false,false,false,0,4),
+                              FLOOR_Dont_Know = new MapTile("","",false,false,false,false,0,6),
+                    
+                              HILLMARKER_OFF = new MapTile("HillMarker","",false,false,false,false,1,4),
+                              HILLMARKER_BLUE = new MapTile("","",false,false,false,false,0,5),
+                              HILLMARKER_RED = new MapTile("","",false,false,false,false,1,5);
         
   private static Integer nextId;
   
@@ -88,14 +91,17 @@ public class MapTile{
                    message; 
     
     private boolean wall,
-                    solid;
+                    solid,
+                    connectFromOther,
+                    connectToOther;
     
     private static final String FORMAT =  "Name:  %20s\n"
                                         + "Wall:  %20s\n"
-                                        + "Solid: %20s";
+                                        + "Solid: %20s\n"
+                                        + "%s";
    
     
-    protected MapTile(String name,String message, boolean wall, boolean solid, int xLocation, int yLocation)
+    protected MapTile(String name,String message, boolean wall, boolean solid,boolean connectFromOther, boolean connectToOther, int xLocation, int yLocation)
     {
       if(nextId == null)
       {
@@ -105,9 +111,11 @@ public class MapTile{
       
       this.id        = nextId++;
       this.name      = name;
-      this.message   = message;
+      this.message   = message; 
       this.wall      = wall;
       this.solid     = solid;
+      this.connectFromOther = connectFromOther;
+      this.connectToOther = connectToOther;
       this.xLocation = xLocation;
       this.yLocation = yLocation;
       
@@ -129,7 +137,7 @@ public class MapTile{
     {
       for(short i = 0; i < MapTile.values().length;i++)
       {
-    	MapTile tile = MapTile.getMapTile(i);
+      MapTile tile = MapTile.getMapTile(i);
         tile.textures = texturePack.getTextureSet(tile.xLocation,tile.yLocation);
       }
     }
@@ -185,6 +193,9 @@ public class MapTile{
     public String  getMessage()             {return this.message;}
     public boolean isSolid()                {return this.solid;}
     public boolean isWall()                 {return this.wall;}
+    public boolean getConnectFromOther()    {return this.connectFromOther;}
+    public boolean getConnectToOther()      {return this.connectToOther;}
+    
     public static Dimension getTopDownSize(){return TOP_DOWN_SIZE;}
     public static Dimension getFpsSize()    {return FPS_SIZE;}
     
@@ -198,7 +209,7 @@ public class MapTile{
     @Override
     public String toString()
     {
-    	return String.format(FORMAT, name, wall, solid);
+      return String.format(FORMAT, name, wall, solid, message);
     }
     
 }
