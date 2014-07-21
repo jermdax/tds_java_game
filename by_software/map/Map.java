@@ -69,6 +69,7 @@ public class Map{
     catch(IOException e)
     {
         System.out.print(ERROR_LOADING_MAP_DEF);
+	e.printStackTrace();
     }
   }
 

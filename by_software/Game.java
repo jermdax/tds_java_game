@@ -71,8 +71,9 @@ public class Game implements Runnable
     window = new GameWindow(TITLE, WINDOW_SIZE,key);
     bStrat = window.getBufferStrategy();
     isRunning = true;
-    map = new Map("D:/work/by_software/src/by_software/map/MapTest.map");
-    textures =  new TexturePack("by_software/map/sprites/",new Dimension(16,16),new Dimension(8,16));
+    map = new Map("by_software/map/MapTest.map");
+    //path, TDS size, FPS size
+    textures =  new TexturePack("by_software/map/sprites/",new Dimension(16,16),new Dimension(32,32));
     MapTile.loadAllTiles(textures);
     player = new Player(2,2,key,map);
     //load the map

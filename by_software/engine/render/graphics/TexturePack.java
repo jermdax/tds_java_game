@@ -21,10 +21,10 @@ public class TexturePack
   private static        BufferedImage allWeps;
   private static final  String        ERROR_LOADING_MAP_TEXTURES  = "Failed to load map texure!";
   
-  private static        String topDownFileName = "TopDownSprites.png";
-  private static        String fpsFileName     = "FpsTextures.png";
-  private static        String mobFileName     = "";
-  private static        String weaponFileName  = "";
+  private static final  String topDownFileName = "TopDownSprites.png";
+  private static final  String fpsFileName     = "FpsTextures.png";
+  private static final  String mobFileName     = "";
+  private static final  String weaponFileName  = "";
   
   private 				int    numTilesX;
   private 				int    numTilesY;
@@ -38,7 +38,7 @@ public class TexturePack
  
   public static void main(String[] args)
   {
-	  TexturePack t =  new TexturePack("D:/work/by_software/src/by_software/map/sprites/",new Dimension(16,16),new Dimension(8,16));
+	  TexturePack t =  new TexturePack("by_software/map/sprites/",new Dimension(16,16),new Dimension(8,16));
 	  MapTile.setTexturePack(t);
 	  MapTile.loadAllTiles();
 	  
@@ -49,7 +49,6 @@ public class TexturePack
 	  frame.setVisible(true);
 	  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	  frame.pack();
-	
   }
   
   public TexturePack(String path,Dimension topDownSize,Dimension fpsSize)
@@ -70,7 +69,7 @@ public class TexturePack
 		numTilesY = (allTdsTiles.getHeight() / topDownSize.height);
 	
 	  } catch (IOException e) {
-		  	System.out.println(ERROR_LOADING_MAP_TEXTURES);
+		  System.out.println(ERROR_LOADING_MAP_TEXTURES);
 			e.printStackTrace();
 	  }
   }
@@ -78,7 +77,7 @@ public class TexturePack
   
   public BufferedImage getSprite(int x, int y)
   {
-	return allTdsTiles.getSubimage(x * topDownSize.width, y * topDownSize.height, topDownSize.width, topDownSize.height);
+    return allTdsTiles.getSubimage(x * topDownSize.width, y * topDownSize.height, topDownSize.width, topDownSize.height);
   }
   
   
@@ -86,19 +85,16 @@ public class TexturePack
   
   public BufferedImage getFpsXTexture(int x, int y)
   {
-    return allFpsTextures.getSubimage(x * fpsSize.width, y * fpsSize.height, fpsSize.width, fpsSize.width);
+    return allFpsTextures.getSubimage(x * fpsSize.width, y * fpsSize.height, fpsSize.width, fpsSize.height);
   }
   
   public BufferedImage getFpsYTexture(int x, int y)
   {
-    x++;
-    System.out.println(x * fpsSize.width);
-    return allFpsTextures.getSubimage(x * fpsSize.width, y * fpsSize.height, fpsSize.width, fpsSize.width);
+    return allFpsTextures.getSubimage(x * fpsSize.width, y * fpsSize.height, fpsSize.width, fpsSize.height);
   }
   
   public BufferedImage[] getTextureSet(int x, int y)
   {
-	  
 	  BufferedImage[] set = {getSprite(x,y), getFpsXTexture(x,y), getFpsYTexture(x,y)};
 	  return set;
   }
