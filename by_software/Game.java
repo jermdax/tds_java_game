@@ -10,6 +10,8 @@ import by_software.engine.render.graphics.GameWindow;
 import by_software.engine.render.perspective.*;
 import by_software.map.Map;
 import by_software.mob.player.Player;
+import by_software.map.MapTile;
+import by_software.engine.render.graphics.TexturePack;
 
 
 public class Game implements Runnable
@@ -32,6 +34,9 @@ public class Game implements Runnable
   private boolean        isRunning        = false;
   //the background image of the screen
   private BufferedImage  background;
+  //game texturepack, both TDS and FPS textures
+  private TexturePack texPack = new TexturePack("by_software/map/sprites/", 
+                                                new Dimension(16, 16), new Dimension(32, 32));
   //Prespective to render
   private Perspective perspective;
   private Perspective otherPerspective;
@@ -62,6 +67,8 @@ public class Game implements Runnable
     isRunning = true;
     map = new Map("by_software/map/MapTest.map");
     player = new Player(2,2,key,map);
+    //load the map
+    MapTile.loadAllTiles(texPack);
     perspective = new PerspectiveFirstPerson(map);
     otherPerspective = new PerspectiveTopDown(map);
     run();

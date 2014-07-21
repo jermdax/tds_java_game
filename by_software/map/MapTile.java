@@ -44,8 +44,7 @@ public class MapTile{
     private int id;
     private String name, message; 
     private boolean wall, solid;
-    
-    
+
     protected MapTile(String name,String message, boolean wall, boolean solid)
     {
       if(nextId == null)
@@ -75,7 +74,7 @@ public class MapTile{
     //have to call this before useing any textures 
     public static void loadAllTiles()
     {
-      for(short i = 0; i < MapTile.values().length;i++)
+      for(short i = 0; i < MapTile.values().length; i++)
       {
         
         MapTile.getMapTile(i).textures = texturePack.getTextureSet(i);
@@ -133,12 +132,12 @@ public class MapTile{
       return this.id;
     }
     
-    public String  getName()       {return this.name;}
-    public String  getMessage()      {return this.message;}
-    public boolean isSolid()        {return this.solid;}
-    public boolean isWall()        {return this.wall;}
+    public String  getName()                {return this.name;    }
+    public String  getMessage()             {return this.message; }
+    public boolean isSolid()                {return this.solid;   }
+    public boolean isWall()                 {return this.wall;    }
     public static Dimension getTopDownSize(){return TOP_DOWN_SIZE;}
-    public static Dimension getFpsSize()    {return FPS_SIZE;}
+    public static Dimension getFpsSize()    {return FPS_SIZE;     }
     
     private static MapTile[] extendArraySize(MapTile[] array){
         MapTile[] temp = array.clone();
