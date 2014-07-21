@@ -27,9 +27,10 @@ import by_software.engine.render.graphics.TexturePack;
 
 public class MapMaker {
   
-  private static int sidedBarWidth = 302,tileSize = 16;
+  private static int sideBarWidth = 302;
   private int numTiles;
-  private int perferedHeight = 3000;
+  private Dimension tileSize;
+  private int sideScrollHeight = 3000;
 
  
   private int sizeX, sizeY;
@@ -51,9 +52,10 @@ public class MapMaker {
 
   public static void main(String[] args)
   {
-    TexturePack t =  new TexturePack("by_software/map/sprites/",new Dimension(16,16),new Dimension(32,32));  
+    TexturePack t =  new TexturePack("by_software/map/sprites/",new Dimension(16,16),new Dimension(8,16)); 
     
-    MapMaker m = new MapMaker("Map Maker","D:/work/by_software/src/",40,41,t);
+  //TexturePack t =  new TexturePack("D:/work/by_software/src/by_software/map/sprites/",new Dimension(16,16),new Dimension(8,16)); 
+    MapMaker m = new MapMaker("Map Maker","D:/work/by_software/src/",40,40,t);
   }
   
 
@@ -61,20 +63,19 @@ public class MapMaker {
   {
     this.sizeX = x;
     this.sizeY = y;
-    this.path = path;
-    this.defaultTile = MapTile.VOID;
-    this.selectedTile = MapTile.VOID;
-    this.tileSize = tileSize;
+    this.defaultTile = MapTile.FLOOR;
+    this.selectedTile = MapTile.FLOOR;
+    this.tileSize = texturePack.getTopDownSize();
     this.texturePack = texturePack;
     MapTile.loadAllTiles(texturePack);
     
-    Dimension scrollMapSize =new Dimension(x > maxX?maxX * tileSize :x * (tileSize),
-                      y>maxY?maxY * tileSize :y * (tileSize) );
+    Dimension scrollMapSize =new Dimension(x > maxX?maxX * tileSize.width :x * (tileSize.height),
+                      y>maxY?maxY * tileSize.height :y * (tileSize.height) );
     //map = new short[x][y];
   
     //TODO load in tile enums(?) find number of tiles and set perfered hieght of sidepanel 
-  
-  
+   
+    sideScrollHeight = (MapTile.values().length * tileSize.height) /  sideBarWidth /tileSize.width;
     //set up the JFrame
     frame = new JFrame(title);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -84,20 +85,15 @@ public class MapMaker {
     
     panel = new JPanel();
     panel.setLayout(new BorderLayout());
-    
-    sidePanel = new JPanel();
-    sidePanel.setBackground(Color.lightGray);
-     
-   
-    
+
     
     sidePanel = new JPanel();
     sidePanel.setBackground(Color.lightGray);
     sidePanel.setLayout(new FlowLayout());
-    sidePanel.setPreferredSize(new Dimension(sidedBarWidth,perferedHeight));
+    sidePanel.setPreferredSize(new Dimension(sideBarWidth,sideScrollHeight));
    
     JScrollPane buttonPane =  new JScrollPane(sidePanel);
-    buttonPane.setPreferredSize(new Dimension(sidedBarWidth + 20,frame.getHeight()));
+    buttonPane.setPreferredSize(new Dimension(sideBarWidth + 20,frame.getHeight()));
     buttonPane.setVerticalScrollBarPolicy( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
     selectButtons = new SelectButton[MapTile.values().length]; 
@@ -139,7 +135,7 @@ public class MapMaker {
   public void exportMap(String name)
   {
     try {
-    PrintWriter writer = new PrintWriter(name + ".map","UTF-8");
+    PrintWriter writer = new PrintWriter(name,"UTF-8");
 
     
     writer.print(mapPanel.toString());
@@ -170,7 +166,7 @@ public class MapMaker {
     {
    
       mapPanel.setSelectedTile(tile);
-      optionPanel.update();
+      optionPanel.update(tile);
     }
   }
   
@@ -193,7 +189,7 @@ public class MapMaker {
       selectedPanel.setLayout(new BorderLayout());
      
       textArea = new  JTextArea();
-      textArea.setText(selectedTile.toString() + "\n" + selectedTile.getMessage() + "\n" +  selectedTile.isSolid());
+      textArea.setText(selectedTile.toString());
       textArea.setVisible(true);
 
       tileLabel = new JLabel();
@@ -206,10 +202,10 @@ public class MapMaker {
       add(selectedPanel,BorderLayout.NORTH);
     }
     
-    public void update()
+    public void update(MapTile tile)
     {
-      tileLabel.setIcon(new ImageIcon(selectedTile.getTopSprite()));
-      textArea.setText(selectedTile.toString() + "\n" + selectedTile.getMessage() + "\n" +  selectedTile.isSolid());
+      tileLabel.setIcon(new ImageIcon(tile.getTopSprite()));
+      textArea.setText(tile.toString());
     }
   }
 

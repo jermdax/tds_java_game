@@ -21,12 +21,15 @@ public class MapPanel extends JPanel {
     private int sizeX,sizeY;
     private Dimension tileSize;
     private MapTile defaultTile;
-    private MapTile selectedTile = MapTile.VOID;
+    private MapTile selectedTile = MapTile.FLOOR;
+    
+    
+  
     
     public MapPanel(String name, Dimension tileSize, MapTile defaultTile)
     {
       
-      super();
+      //super();
       this.defaultTile = defaultTile;
       this.tileSize = tileSize;
       this.loadMap(name);  
@@ -34,22 +37,123 @@ public class MapPanel extends JPanel {
     
     public MapPanel(int x,int y, Dimension tileSize, MapTile defaultTile)
     {
-      super();
+      //super();
       this.defaultTile = defaultTile;
-    this.tileSize = tileSize;
+      this.tileSize = tileSize;
       this.setLayout(new GridLayout(y,x));
+      this.sizeX = x;
+      this.sizeY = y;
       map = new MapLabel[x][y];
-      for(int i = 0; i < x; i++ )
+      for(int j = 0 ; j < y; j++)
       {
-        for(int j = 0 ; j < y; j++)
+        for(int i = 0; i < x; i++ )
         {
-          map[i][j] = new MapLabel();
+        
+          map[i][j] = new MapLabel(i,j);
           this.add(map[i][j]);
         }
       }
         
     }
     
+    public void updateSurroundingTiles(int x, int y)
+    {
+      MapLabel currentLabel;
+      try{
+        currentLabel = map[x][y-1];
+        currentLabel.setNewTile(currentLabel.getTile());
+      }catch(ArrayIndexOutOfBoundsException e){}
+      finally{}
+      
+      try{
+        currentLabel = map[x+1][y-1];
+        currentLabel.setNewTile(currentLabel.getTile());
+      }catch(ArrayIndexOutOfBoundsException e){}
+      finally{}
+      
+      try{
+        currentLabel = map[x+1][y];
+        currentLabel.setNewTile(currentLabel.getTile());
+      }catch(ArrayIndexOutOfBoundsException e){}
+      finally{}
+      
+      try{
+        currentLabel = map[x+1][y+1];
+        currentLabel.setNewTile(currentLabel.getTile());
+      }catch(ArrayIndexOutOfBoundsException e){}
+      finally{}
+      
+      try{
+        currentLabel = map[x][y+1];
+        currentLabel.setNewTile(currentLabel.getTile());
+      }catch(ArrayIndexOutOfBoundsException e){}
+      finally{}
+      
+      try{
+        currentLabel = map[x-1][y+1];
+        currentLabel.setNewTile(currentLabel.getTile());
+      }catch(ArrayIndexOutOfBoundsException e){}
+      finally{}
+      
+      try{
+        currentLabel = map[x-1][y];
+        currentLabel.setNewTile(currentLabel.getTile());
+      }catch(ArrayIndexOutOfBoundsException e){}
+      finally{}
+      
+      try{
+        currentLabel = map[x-1][y-1];
+        currentLabel.setNewTile(currentLabel.getTile());
+      }catch(ArrayIndexOutOfBoundsException e){}
+      finally{}
+      
+    }
+    
+    public byte checkSurroundingTiles(int x, int y)
+    {
+      byte code = 0;
+      try{
+        if(map[x][y-1].getTile().getConnectFromOther()) {code++;}
+      }catch(ArrayIndexOutOfBoundsException e){}
+      finally{code <<= 1;}
+      
+      try{
+        if(map[x+1][y-1].getTile().getConnectFromOther()) {code++;}
+      }catch(ArrayIndexOutOfBoundsException e){}
+      finally{code <<= 1;}
+      
+      try{
+        if(map[x+1][y].getTile().getConnectFromOther()) {code++;}
+      }catch(ArrayIndexOutOfBoundsException e){}
+      finally{code <<= 1;}
+      
+      try{
+        if(map[x+1][y+1].getTile().getConnectFromOther()) {code++;}
+      }catch(ArrayIndexOutOfBoundsException e){}
+      finally{code <<= 1;}
+      
+      try{
+        if(map[x][y+1].getTile().getConnectFromOther()) {code++;}
+      }catch(ArrayIndexOutOfBoundsException e){}
+      finally{code <<= 1;}
+      
+      try{
+        if(map[x-1][y+1].getTile().getConnectFromOther()) {code++;}
+      }catch(ArrayIndexOutOfBoundsException e){}
+      finally{code <<= 1;}
+      
+      try{
+        if(map[x-1][y].getTile().getConnectFromOther()) {code++;}
+      }catch(ArrayIndexOutOfBoundsException e){}
+      finally{code <<= 1;}
+      
+      try{
+        if(map[x-1][y-1].getTile().getConnectFromOther()) {code++;}
+      }catch(ArrayIndexOutOfBoundsException e){}
+      finally{}
+      
+      return code;
+    }
     
     public void loadMap(String name)
     {
@@ -71,7 +175,7 @@ public class MapPanel extends JPanel {
           {
             for(int i = 0; i < sizeX; i++)
             {
-              map[i][j] = new MapLabel(scanner.nextShort());
+              map[i][j] = new MapLabel(scanner.nextShort(),i,j);
               this.add(map[i][j]);
             }      
           }
@@ -86,12 +190,14 @@ public class MapPanel extends JPanel {
     
     public String toString()
     {
+      
       String string = "";
       string += sizeX +" "+ sizeY + " \n";
       for(int i = 0;i < sizeY; i++)
       {
         for(int j = 0;j<sizeX;j++)
         {
+
           string += map[j][i].getTile().ordinal() + " ";
                 
         }
@@ -111,13 +217,15 @@ public class MapPanel extends JPanel {
     
     private class MapLabel extends JLabel implements MouseListener{
       private MapTile tile;
+      int y,x;
         int tileID = 0;
         private Dimension size;
        
-        public MapLabel()
+        public MapLabel(int x ,int y)
         {
-          super();
-          
+          //super();
+          this.x = x;
+          this.y = y;
           size = tileSize;
           setBackground(Color.WHITE);
           setOpaque(true);
@@ -133,9 +241,11 @@ public class MapPanel extends JPanel {
           
         }
         
-        public MapLabel(short id)
+        public MapLabel(short id, int x ,int y)
         {
-          size = tileSize;
+          this.x = x;
+          this.y = y;
+            size = tileSize;
             setPreferredSize(size);
             setBackground(Color.WHITE);
             setOpaque(true);
@@ -153,25 +263,33 @@ public class MapPanel extends JPanel {
         
         public void setNewTile(MapTile tile)
         {
-          this.tile = tile;
-          setIcon(new ImageIcon(tile.getTopSprite()));
-          tileID = tile.ordinal();
+          this.tile = checkTile(tile);
+          setIcon(new ImageIcon(this.tile.getTopSprite()));
+          tileID = this.tile.ordinal();
         }  
         
         public void setNewTile(MouseEvent e)
         {
           if(mouseButton == 1)
           {
-            this.tile = selectedTile;
+            setNewTile(selectedTile);
           }
           if(mouseButton == 3)
           {
-            this.tile = defaultTile;
-          }
-          setIcon(new ImageIcon(tile.getTopSprite()));
-          tileID = tile.ordinal();
+            setNewTile(defaultTile);
+          }   
+          updateSurroundingTiles(this.x,this.y);
         }  
         
+        public MapTile checkTile(MapTile tile)
+        {
+          if(tile.getConnectToOther())
+          {
+            //System.out.println(Integer.toBinaryString(((Integer)(int)checkSurroundingTiles(this.x,this.y))));
+            return MapTileSet.getMapTile(checkSurroundingTiles(this.x,this.y));
+          }
+          return tile;
+        }
         
         
         

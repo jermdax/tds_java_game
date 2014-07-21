@@ -38,21 +38,17 @@ public class TexturePack
  
   public static void main(String[] args)
   {
-	  TexturePack t =  new TexturePack("D:/work/by_software/src/by_software/map/sprites/",new Dimension(16,16),new Dimension(16,16));
-	  
-	  System.out.print(t.getFpsYTexture(0));
+	  TexturePack t =  new TexturePack("D:/work/by_software/src/by_software/map/sprites/",new Dimension(16,16),new Dimension(8,16));
 	  MapTile.setTexturePack(t);
 	  MapTile.loadAllTiles();
 	  
-	  
-	  
-	    JFrame frame = new JFrame();
-		JLabel panel = new JLabel();
-		panel.setIcon(new ImageIcon(MapTile.VOID.getTopSprite()));
-		frame.add(panel);
-		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.pack();
+	  JFrame frame = new JFrame();
+	  JLabel panel = new JLabel();
+	  panel.setIcon(new ImageIcon(MapTile.FLOOR.getTopSprite()));
+	  frame.add(panel);
+	  frame.setVisible(true);
+	  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	  frame.pack();
 	
   }
   
@@ -80,49 +76,30 @@ public class TexturePack
   }
   
   
-  public BufferedImage getSprite(int id)
+  public BufferedImage getSprite(int x, int y)
   {
-	  int x,y;
-	
-	  x = (id % numTilesX) * topDownSize.width;
-	  y = (id / numTilesX) * topDownSize.height;
-	  return allTdsTiles.getSubimage(x, y, topDownSize.width, topDownSize.height);
+	return allTdsTiles.getSubimage(x * topDownSize.width, y * topDownSize.height, topDownSize.width, topDownSize.height);
   }
   
   
   //fps textures will be arrange x face then y face of the same block
   
-  public BufferedImage getFpsXTexture(int id)
+  public BufferedImage getFpsXTexture(int x, int y)
   {
-	 
-	  id *= 2;// texture is 2 wide
-	  int x,y;
-		
-	  x = (id % numTilesX) * fpsSize.width;
-	  y = (id / numTilesX) * fpsSize.height;
-	  
-	  return allFpsTextures.getSubimage(x, y, fpsSize.width, fpsSize.width);
-	  
-	  
-	
+    return allFpsTextures.getSubimage(x * fpsSize.width, y * fpsSize.height, fpsSize.width, fpsSize.width);
   }
   
-  public BufferedImage getFpsYTexture(int id)
+  public BufferedImage getFpsYTexture(int x, int y)
   {
-		  id *= 2;
-		  id++;
-		  int x,y;
-			
-		  x = (id % numTilesX) * fpsSize.width;
-		  y = (id / numTilesX) * fpsSize.height;
-		  
-		  return allFpsTextures.getSubimage(x, y, fpsSize.width, fpsSize.width);
+    x++;
+    System.out.println(x * fpsSize.width);
+    return allFpsTextures.getSubimage(x * fpsSize.width, y * fpsSize.height, fpsSize.width, fpsSize.width);
   }
   
-  public BufferedImage[] getTextureSet(int id)
+  public BufferedImage[] getTextureSet(int x, int y)
   {
 	  
-	  BufferedImage[] set = {getSprite(id), getFpsXTexture(id), getFpsYTexture(id)};
+	  BufferedImage[] set = {getSprite(x,y), getFpsXTexture(x,y), getFpsYTexture(x,y)};
 	  return set;
   }
   public Dimension getTopDownSize(){return topDownSize;}
