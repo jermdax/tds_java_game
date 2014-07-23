@@ -114,7 +114,7 @@ public class Game implements Runnable
         }
         else 
         {
-          System.out.println("not sleeping");
+          System.out.println("sleep time = " + sleepTime);
         }
       }catch(Exception e){
         System.err.println("Problem with the thread sleep");
@@ -176,7 +176,8 @@ public class Game implements Runnable
     ++frames;
   }
 
-  public GameWindow getWindow(){return window;}
+  public        GameWindow getWindow()     {return window;     }
+  public static Dimension  getWindowSize() {return WINDOW_SIZE;}
 
   public static void main(String[] args){new Game();}
 }

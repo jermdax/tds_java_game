@@ -14,6 +14,12 @@ public class PerspectiveTopDown implements Perspective
   private static Map worldMap;
   //TODO dont hardcode in the size
   private static BufferedImage mapImg;
+  //scale by which the sprites are scaled when loaded
+  public static final int SCALE = 4;
+
+  private static final  int 
+    SIZE_X = (int)MapTile.getTopDownSize().getWidth(), 
+    SIZE_Y = (int)MapTile.getTopDownSize().getHeight();
 
   public PerspectiveTopDown(Map worldMap)
   {
@@ -27,23 +33,29 @@ public class PerspectiveTopDown implements Perspective
   private void constructMap(MapTile[][] tiles)
   {
     Graphics g = mapImg.createGraphics();
-    int 
-      sizeX = (int)MapTile.getTopDownSize().getWidth(), 
-      sizeY = (int)MapTile.getTopDownSize().getHeight();
     //draw the map
     for(int x = 0; x < tiles[0].length; x++)
       for(int y = 0; y < tiles.length; y++)
       {
-        g.drawImage(tiles[x][y].getTopSprite(), x*sizeX, y*sizeY, Color.BLACK, null);
+        g.drawImage(tiles[x][y].getTopSprite(), x*(SIZE_X*SCALE), y*(SIZE_Y*SCALE), x*SIZE_X*SCALE+SIZE_X*SCALE, y*SIZE_Y*SCALE+SIZE_Y*SCALE, 0, 0, SIZE_X, SIZE_Y, Color.BLACK, null);
       }
 
   }
-
+private int startX = 300, startY = 300;
  public void render(Graphics gr, int screenWidth, int screenHidth ,Game game, Player player)
   {
-    gr.drawImage(mapImg, 0, 0, Color.BLACK, null);
+    //draw the map with the top left corner at the player pos - half the gamewindow size
+    int
+      halfWindX = (int)(Game.getWindowSize().getWidth() /2),
+      halfWindY = (int)(Game.getWindowSize().getWidth()/2),
+      startX    = (int)(player.getPosX()*SCALE*SIZE_X),
+      startY    = (int)(player.getPosY()*SCALE*SIZE_X);
+    //the line below is doing the rendering and the one i think has a issue
+    //it has some hardcoded values, they are just while debugging
+    gr.drawImage(mapImg, 0, 0, halfWindX*2, halfWindY*2, startX-halfWindX, startY-halfWindY, startX+halfWindX, startY+halfWindY, Color.RED, null);
     //draw player
     gr.setColor(Color.GREEN);
-    gr.fillOval((int)(player.getPosX()*16-4), (int)(player.getPosY()*16-4), 8, 8);
+    //TODO dont use hardcoded values
+    gr.fillOval(halfWindX-4, halfWindY-4, 8, 8);
   }
 }
