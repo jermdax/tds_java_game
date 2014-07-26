@@ -20,7 +20,7 @@ import by_software.engine.render.graphics.TexturePack;
 
 public class Game implements Runnable
 {
-  private static final Dimension WINDOW_SIZE   = new Dimension(800, 600);
+  private static final Dimension WINDOW_SIZE   = new Dimension(1000, 600);
   //the preferred frames per second
   private static final int       DESIRED_FPS   = 120;
   //game name

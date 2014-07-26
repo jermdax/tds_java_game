@@ -50,7 +50,7 @@ public class MapTileSet {
         return triple.getTile();
       }
     }
-    return MapTile.WALL_PILLER;
+    return MapTile.WALL_PILLAR;
   }
   
 

@@ -2,16 +2,20 @@ package by_software.engine.render.perspective;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 
 import by_software.Game;
 import by_software.map.Map;
+import by_software.map.MapTile;
 import by_software.mob.player.Player;
 
 public class PerspectiveFirstPerson implements Perspective
 {
 
   private static Map worldMap;
-
+  private BufferedImage image;
+  private int [] pixels;
   public PerspectiveFirstPerson(Map worldMap)
   {
     this.worldMap = worldMap;
@@ -19,16 +23,22 @@ public class PerspectiveFirstPerson implements Perspective
 
   public void render(Graphics gr, int screenWidth, int screenHeight ,Game game, Player player)
   {
-    
+	  if(image == null)
+	  {
+		  image = new BufferedImage(screenWidth,screenHeight,BufferedImage.TYPE_INT_ARGB);
+		  pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
+	  }
 
+	 
     gr.setColor(Color.BLACK);//the screen would not reset
     gr.fillRect(0,0,screenWidth,screenHeight);
 
-    for(int i = 0; i <= screenWidth; i++)
+    
+    for(int x = 0; x <= screenWidth; x++)
     { 
 
       //cameraX is the relitive position of i int the screen where the left side = -1 and right = 1
-      double cameraX = 2 * i / ((double)screenWidth) -1;
+      double cameraX = 2 * x / ((double)screenWidth) -1;
       
       //ray starts at player
       double rayPosX = player.getPosX(); 
@@ -126,43 +136,69 @@ public class PerspectiveFirstPerson implements Perspective
         drawEnd = screenHeight;
       }
       
-
-      Color color;
-      switch(worldMap.getMapTile(mapX,mapY).ordinal())
+      //test//
+      
+      double wallX; //where exactly the wall was hit
+      if (side == 1) wallX = rayPosX + ((mapY - rayPosY + (1 - stepY) / 2) / rayDirY) * rayDirX;
+      else       wallX = rayPosY + ((mapX - rayPosX + (1 - stepX) / 2) / rayDirX) * rayDirY;
+      wallX -= ((int)(wallX));
+       
+      //x coordinate on the texture
+      int texX = (int)(wallX * MapTile.getFpsSize().width);
+      if(side == 0 && rayDirX > 0) texX = MapTile.getFpsSize().width - texX - 1;
+      if(side == 1 && rayDirY < 0) texX = MapTile.getFpsSize().width - texX - 1;
+      //Color color;
+      BufferedImage ImageStrip;
+      if(side == 0)
       {
-        case 19 : 
-          color = Color.RED;
-          break; 
-        case 14 : 
-          color = Color.GREEN;
-          break;
-        case 17 : 
-          color = Color.YELLOW;
-          break;
-        case 18 : 
-          color = Color.BLUE;
-          break;
-        case 13 : 
-            color = Color.WHITE;
-            break;
-        default: color = Color.cyan;
-
-
+        ImageStrip = this.worldMap.getMapTile(mapX, mapY).getXSideSprite(texX);
       }
-      if(side == 1)
+      else
       {
-       color = color.darker();
+    	ImageStrip = this.worldMap.getMapTile(mapX, mapY).getYSideSprite(texX);
       }
-      gr.setColor(color);
-      gr.drawLine(i,drawEnd,i,drawStart);
-
+      
+      
+      
+     for(int y = drawStart; y<drawEnd; y++)
+      {
+    	 //int texY =(int) (MapTile.getFpsSize().height  /(double)lineHeight  * (y - lineHeight/2));
+    	 
+    	 int d = y * 256 - screenHeight * 128 + lineHeight * 128;  //256 and 128 factors to avoid floats
+         int texY = ((d * MapTile.getFpsSize().height) / lineHeight) / 256;
+    	
+      
+       //System.out.println("texy " + texY );
+        int color = ImageStrip.getRGB(0, texY);
+        //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
+        if((x + y*screenWidth) >= pixels.length)
+        {
+        	
+        	break;
+        }
+        else
+        {
+        	pixels[x + y*screenWidth] = color;
+        }
+       } 
+    }
+    gr.drawImage(image, 0, 0, null);
+    clear();
+    
 
     }
 
 
+  	public void clear()
+  	{
+  		for(int i = 0; i < pixels.length  ;i++)
+  	    {
+  	    		pixels[i] = 0;
+  	    	
+  	    }
+  	}
   }
 
 
 
  
-}

@@ -15,7 +15,7 @@ public class PerspectiveTopDown implements Perspective
   //TODO dont hardcode in the size
   private static BufferedImage mapImg;
   //scale by which the sprites are scaled when loaded
-  public static final int SCALE = 4;
+  public static final int SCALE = 2;
 
   private static final  int 
     SIZE_X = (int)MapTile.getTopDownSize().getWidth(), 
@@ -24,8 +24,8 @@ public class PerspectiveTopDown implements Perspective
   public PerspectiveTopDown(Map worldMap)
   {
     this.worldMap = worldMap;
-    mapImg = new BufferedImage((int)(worldMap.getMapSizeX() * MapTile.getTopDownSize().getWidth()), 
-                               (int)(worldMap.getMapSizeY() * MapTile.getTopDownSize().getHeight()), 
+    mapImg = new BufferedImage((int)(worldMap.getMapSizeX() * MapTile.getTopDownSize().getWidth()*SCALE), 
+                               (int)(worldMap.getMapSizeY() * MapTile.getTopDownSize().getHeight()*SCALE), 
                                BufferedImage.TYPE_INT_ARGB);
     constructMap( this.worldMap.getTiles() );
   }
