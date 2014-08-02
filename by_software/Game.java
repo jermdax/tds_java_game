@@ -6,6 +6,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
 import by_software.engine.input.Keyboard;
+import by_software.engine.physics.Physics;
 import by_software.engine.render.graphics.GameWindow;
 import by_software.engine.render.graphics.TexturePack;
 import by_software.engine.render.perspective.Perspective;
@@ -14,17 +15,15 @@ import by_software.engine.render.perspective.PerspectiveTopDown;
 import by_software.map.Map;
 import by_software.map.MapTile;
 import by_software.mob.player.Player;
-import by_software.map.MapTile;
-import by_software.engine.render.graphics.TexturePack;
 
 
 public class Game implements Runnable
 {
-  private static final Dimension WINDOW_SIZE   = new Dimension(1000, 600);
+  private static final Dimension WINDOW_SIZE   = new Dimension(800, 450);
   //the preferred frames per second
-  private static final int       DESIRED_FPS   = 120;
+  private static final int       DESIRED_FPS   = 60;
   //game name
-  public static  final String    TITLE         = "Some_Game";
+  public static  final String    TITLE         = "Counter_kike";
   //nanoSecs in a sec
   private static final long      NANO_PER_SEC  = 1000000000;
   //nanoSecs in a tick
@@ -41,6 +40,9 @@ public class Game implements Runnable
   //game texturepack, both TDS and FPS textures
   private TexturePack texPack = new TexturePack("by_software/map/sprites/", 
                                                 new Dimension(16, 16), new Dimension(32, 32));
+  
+  //physics 
+  private Physics physics;
   //Prespective to render
   private Perspective perspective;
   private Perspective otherPerspective;
@@ -49,7 +51,7 @@ public class Game implements Runnable
   //Map
   private Map map;
   //keyboard input
-  private TexturePack textures;
+  
   
   public Keyboard key;
 
@@ -62,7 +64,7 @@ public class Game implements Runnable
   private long lastNano  = 0;
   private long curNano   = 0;
 
-
+ 
   public Game()
   {
     key = new Keyboard(.25, this);
@@ -71,11 +73,12 @@ public class Game implements Runnable
     window = new GameWindow(TITLE, WINDOW_SIZE,key);
     bStrat = window.getBufferStrategy();
     isRunning = true;
+  
     map = new Map("by_software/map/MapTest.map");
+    physics = new Physics(map);
     //path, TDS size, FPS size
-    textures =  new TexturePack("by_software/map/sprites/",new Dimension(16,16),new Dimension(32,32));
-    MapTile.loadAllTiles(textures);
-    player = new Player(2,2,key,map);
+    //String name,int health, double speed, int acceleration, int damage,double size,double posX, double posY, Keyboard key, Map map,Physics physics)
+    player = new Player("Player",100,3,1,10,.25,3,3,key,map,physics);
     //load the map
     MapTile.loadAllTiles(texPack);
     perspective = new PerspectiveFirstPerson(map);
@@ -112,10 +115,10 @@ public class Game implements Runnable
         {
           Thread.sleep(sleepTime);
         }
-        else 
+       /* else 
         {
           System.out.println("sleep time = " + sleepTime);
-        }
+        }*/
       }catch(Exception e){
         System.err.println("Problem with the thread sleep");
         e.printStackTrace();

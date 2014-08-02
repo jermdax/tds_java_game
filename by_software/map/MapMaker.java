@@ -52,9 +52,9 @@ public class MapMaker {
 
   public static void main(String[] args)
   {
-    TexturePack t =  new TexturePack("by_software/map/sprites/",new Dimension(16,16),new Dimension(8,16)); 
+   // TexturePack t =  new TexturePack("D:/work/by_software/src/by_software/map/sprites/",new Dimension(16,16),new Dimension(8,16)); 
     
-  //TexturePack t =  new TexturePack("D:/work/by_software/src/by_software/map/sprites/",new Dimension(16,16),new Dimension(8,16)); 
+  TexturePack t =  new TexturePack("by_software/map/sprites/",new Dimension(16,16),new Dimension(8,16)); 
     MapMaker m = new MapMaker("Map Maker","D:/work/by_software/src/",40,40,t);
   }
   

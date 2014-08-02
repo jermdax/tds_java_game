@@ -138,6 +138,11 @@ public class Map{
   {
     return checkCollision((int) x, (int) y);
   }
+  
+  public boolean checkCollision(double x, double y,double size)
+  {
+    return checkCollision((int) x, (int) y);
+  }
 
   public short[][] getMap()             {  return this.map;       }
   public MapTile getMapTile(int x,int y){  return this.tiles[x][y];}

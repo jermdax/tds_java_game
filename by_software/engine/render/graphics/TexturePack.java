@@ -85,11 +85,14 @@ public class TexturePack
   
   public BufferedImage getFpsXTexture(int x, int y)
   {
+	x *= 2;  
     return allFpsTextures.getSubimage(x * fpsSize.width, y * fpsSize.height, fpsSize.width, fpsSize.height);
   }
   
   public BufferedImage getFpsYTexture(int x, int y)
   {
+	  x *= 2;
+	  x++;
     return allFpsTextures.getSubimage(x * fpsSize.width, y * fpsSize.height, fpsSize.width, fpsSize.height);
   }
   

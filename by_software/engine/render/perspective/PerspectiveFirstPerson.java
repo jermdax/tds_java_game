@@ -16,6 +16,8 @@ public class PerspectiveFirstPerson implements Perspective
   private static Map worldMap;
   private BufferedImage image;
   private int [] pixels;
+  private int test = 1;
+  
   public PerspectiveFirstPerson(Map worldMap)
   {
     this.worldMap = worldMap;
@@ -116,6 +118,7 @@ public class PerspectiveFirstPerson implements Perspective
       if (side == 0)
       {
         perpWallDist = Math.abs((mapX - rayPosX + (1 - stepX) / 2) / rayDirX);
+       
       }
       else
       {
@@ -139,14 +142,15 @@ public class PerspectiveFirstPerson implements Perspective
       //test//
       
       double wallX; //where exactly the wall was hit
-      if (side == 1) wallX = rayPosX + ((mapY - rayPosY + (1 - stepY) / 2) / rayDirY) * rayDirX;
-      else       wallX = rayPosY + ((mapX - rayPosX + (1 - stepX) / 2) / rayDirX) * rayDirY;
+      if (side == 1) {wallX = rayPosX + ((mapY - rayPosY + (1 - stepY) / 2) / rayDirY) * rayDirX;}
+      else      {wallX = rayPosY + ((mapX - rayPosX + (1 - stepX) / 2) / rayDirX) * rayDirY;}
       wallX -= ((int)(wallX));
        
       //x coordinate on the texture
-      int texX = (int)(wallX * MapTile.getFpsSize().width);
+      int texX = (int)(wallX * MapTile.getFpsSize().width );
       if(side == 0 && rayDirX > 0) texX = MapTile.getFpsSize().width - texX - 1;
       if(side == 1 && rayDirY < 0) texX = MapTile.getFpsSize().width - texX - 1;
+      //texX = MapTile.getFpsSize().width - texX - 1;
       //Color color;
       BufferedImage ImageStrip;
       if(side == 0)
@@ -165,22 +169,25 @@ public class PerspectiveFirstPerson implements Perspective
     	 //int texY =(int) (MapTile.getFpsSize().height  /(double)lineHeight  * (y - lineHeight/2));
     	 
     	 int d = y * 256 - screenHeight * 128 + lineHeight * 128;  //256 and 128 factors to avoid floats
-         int texY = ((d * MapTile.getFpsSize().height) / lineHeight) / 256;
+         int texY = (((d * MapTile.getFpsSize().height) / lineHeight) / 256);
+    	if(texY < MapTile.getFpsSize().width && texY >= 0)//remove when collison  are using sphears
+    	{
     	
-      
-       //System.out.println("texy " + texY );
-        int color = ImageStrip.getRGB(0, texY);
-        //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
-        if((x + y*screenWidth) >= pixels.length)
-        {
-        	
-        	break;
-        }
-        else
-        {
-        	pixels[x + y*screenWidth] = color;
-        }
-       } 
+         
+	       //System.out.println("texy " + texY );
+	        int color = ImageStrip.getRGB(0, texY);
+	        //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
+	        if((x + y*screenWidth) >= pixels.length)
+	        {
+	        	
+	        	break;
+	        }
+	        else
+	        {
+	        	pixels[x + y*screenWidth] = color;
+	        }
+	       } 
+      }
     }
     gr.drawImage(image, 0, 0, null);
     clear();

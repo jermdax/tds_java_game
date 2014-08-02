@@ -1,26 +1,32 @@
 package by_software.mob.player;
 
 import by_software.engine.input.Keyboard;
+import by_software.engine.physics.Physics;
 import by_software.map.Map;
+import by_software.mob.Mob;
 
-public class Player{
+public class Player extends Mob{
 
-  private double posX = 2 ,  posY = 2;
-  private double dirX = 1,  dirY = 0;
-  private double planeX = 0,  planeY = .66; 
-  private double speed = 3 ,rotateSpeed = .5;
+  //private double posX = 2 ,  posY = 2;
+ // private double dirX = 1,  dirY = 0;
+//  private double planeX = 0,  planeY = .66; 
+ // private double speed = 3 ,rotateSpeed = .5;
   private Keyboard input;
   private long timeOld,timeNew;
-  private Map map;
-  public Player(double x, double y, Keyboard key, Map map)
+ // private double size = .5;
+  //private Map map;
+  
+  public Player(String name,int health, double speed, int acceleration, int damage,double size,double posX, double posY, Keyboard key, Map map,Physics physics)
   {
-    posX = x;
-    posY = y;
+	  super(name, health,speed, acceleration, damage,size,posX ,posY,map,physics);
+	
+    //posX = x;
+   // posY = y;
     input = key;
     timeOld = System.nanoTime();
-    this.map = map;
+    ;
   }
-
+  @Override
   public void update()
   {
   
@@ -28,20 +34,20 @@ public class Player{
     
     if( input.up )
     {
-      x = -speed;
+      x = speed;
     }  
     if(input.down)
     {
-      x = speed;
+      x = -speed;
     }
     if(input.left)
     {
-      y = speed;
+      y = -speed;
    
     }
     if(input.right)
     {
-      y = -speed;
+      y = speed;
     }
 
     /*normalsied for movement where x and y != 0
@@ -67,8 +73,8 @@ public class Player{
     timeOld = timeNew;
 
   }
-
-  //will move the player with respect to direction
+/*
+  //will move the mob with respect to direction
   public void moveLocal(double x, double y)
   {
    
@@ -78,8 +84,9 @@ public class Player{
    // System.out.println(dirY + "  " + dirX + " " + dirY *dirX);
     //might have to do this for Y also
     
-    double movePosX, movePosY;
-    if( dirX <0)
+    double movePosX = dirX * x + planeX *y,
+    	   movePosY = dirY * x + planeY *y;
+   /* if( dirX <0)
     {
       movePosX = cos * x - sin * y;
       movePosY = sin * x + cos * y;
@@ -88,37 +95,12 @@ public class Player{
     {
       movePosX = -(cos * x - sin * y);
       movePosY = -(sin * x + cos * y);
-    }
-    if(map.checkCollision(posX + movePosX, posY))
-    {
-      movePosX = 0;
-    }
-    if(map.checkCollision(posX, posY + movePosY))
-    {
-      movePosY = 0;
-    }
-    
-    posX += movePosX;
-    posY += movePosY;
-    
-    if(posX < 0)
-    {
-      posX += map.getMapSizeX();
-    }  
-    if(posX > map.getMapSizeX())
-    {
-      posX -= map.getMapSizeX();
-    }
-    
-    if(posY < 0)
-    {
-      posY += map.getMapSizeY();
-    }  
-    if(posY > map.getMapSizeY())
-    {
-      posY -= map.getMapSizeY();
-    }
-    
+    }#
+   
+    physics.checkCollision(posX,posY, movePosX,movePosY,this);
+    posX = movePosX;
+    posY = movePosY;
+ 
   }
 
   //move player in world space
@@ -145,7 +127,7 @@ public class Player{
     //rotate screen plane
     planeX = Math.cos(Math.toRadians(angle)) * oldPlaneX - Math.sin(Math.toRadians(angle)) * oldPlaneY;
     planeY = Math.sin(Math.toRadians(angle)) * oldPlaneX + Math.cos(Math.toRadians(angle)) * oldPlaneY;
-  }
+  }*/
 
   public double getPosX()    {return this.posX;}
   public double getPosY()    {return this.posY;}
