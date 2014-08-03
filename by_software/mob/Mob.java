@@ -7,9 +7,9 @@ public class Mob
 {
  // FAST("fast", 10, 20, 15, 5),STRONG("strong", 25, 6, 10, 15),TOUGH("tough", 40, 5, 10, 10),AGILE("agile", 10, 20, 25, 5);
 
-  protected double posX,  posY;
-  protected double dirX = 1,   dirY = 0;
-  protected double planeX = 0,  planeY = .66; 
+  protected Vec2d pos;//posX,  posY;
+  protected Vec2d dir;//dirX = 1,   dirY = 0;
+  protected Vec2d plane;//planeX = 0,  planeY = .66; 
   protected double speed,rotateSpeed = .5;
   protected long timeOld,timeNew;
   protected double size;
@@ -60,9 +60,9 @@ public class Mob
    // System.out.println(dirY + "  " + dirX + " " + dirY *dirX);
   
     
-    double movePosX = dirX * x + planeX *y,
-    	   movePosY = dirY * x + planeY *y;
-   /* if( dirX <0)
+    double movePos = new Vec2d(dir.x * x + planeX *y, dir.y * x + planeY *y);
+    //comment below will mean strafe and walk speed are the same
+    /* if( dirX <0)
     {
       movePosX = cos * x - sin * y;
       movePosY = sin * x + cos * y;
@@ -83,8 +83,8 @@ public class Mob
   //move player in world space
   public void moveWorld(double x, double y)
   {
-    posX = x;
-    posY = y;
+    pos.x = x;
+    pos.y = y;
   }
   
 //Shitty matrix multiplaction 
@@ -92,18 +92,16 @@ public class Mob
   {
     //[ cos(a) -sin(a) ][x]
     //[ sin(a)  cos(a) ][y]
-    double oldDirX = dirX;
-    double oldDirY = dirY;
-    double oldPlaneX = planeX;
-    double oldPlaneY = planeY;
+    Vec2d oldDir   = new Vec2d(dir.x, dir.y);
+    Vec2d oldPlane = new Vec2d(plane.x, plane.y);
 
     //rotate player direction
-    dirX = Math.cos(Math.toRadians(angle)) * oldDirX - Math.sin(Math.toRadians(angle)) * oldDirY;
-    dirY = Math.sin(Math.toRadians(angle)) * oldDirX + Math.cos(Math.toRadians(angle)) * oldDirY;
+    dir.set( Math.cos(Math.toRadians(angle)) * oldDir.X - Math.sin(Math.toRadians(angle)) * oldDir.y,
+             Math.sin(Math.toRadians(angle)) * oldDir.X + Math.cos(Math.toRadians(angle)) * oldDir.y);
 
     //rotate screen plane
-    planeX = Math.cos(Math.toRadians(angle)) * oldPlaneX - Math.sin(Math.toRadians(angle)) * oldPlaneY;
-    planeY = Math.sin(Math.toRadians(angle)) * oldPlaneX + Math.cos(Math.toRadians(angle)) * oldPlaneY;
+    plane.set( Math.cos(Math.toRadians(angle)) * oldPlane.X - Math.sin(Math.toRadians(angle)) * oldPlane.y,
+               Math.sin(Math.toRadians(angle)) * oldPlane.X + Math.cos(Math.toRadians(angle)) * oldPlane.y);
   }
   
   public String getClassName(){ return this.name; }
