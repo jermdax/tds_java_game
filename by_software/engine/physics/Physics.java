@@ -11,99 +11,80 @@ public class Physics {
 		this.map = map;
 	}
 	
-	public double[] checkCollision(double posX, double posY, double movX, double movY,Mob mob)
+	//keep mob size away from walls , doent not work if mob is bigger the 1 map unit
+	public double[] checkMapCollision(double posX, double posY, double movX, double movY,Mob mob)
 	{
 		double  newX = posX + movX,
 				newY = posY + movY,
-				size = mob.getSize(),
-				sizeX = size,
-				sizeY = size;
+				size = mob.getSize();
+			
 		
-		
+		//get nearest map tile 
 		int mapX = (int) Math.round(newX),
 			mapY = (int) Math.round(newY);
 
-			if(movX <0)
+			//checks collisions in cardinal directions
+			if(map.checkCollision(newX + size, posY))
 			{
-				sizeX = - sizeX;
+				newX += size;
+				newX = Math.round(newX) - size;   
 			}
-			if(movY <0)
+			if(map.checkCollision(posX, newY + size))
 			{
-				sizeY = - sizeY;
+				newY += size;
+				newY = Math.round(newY) - size;
 			}
-			
-
-			//double mapX = 4;
-			//double mapY = 5;
-			
-		
-		
-			if(map.checkCollision(newX + sizeX, posY))
+			if(map.checkCollision(newX - size, posY))
 			{
-				newX += sizeX;
-				newX = Math.round(newX) - sizeX;   
+				newX -= size;
+				newX = Math.round(newX) + size;   
 			}
-			if(map.checkCollision(posX, newY + sizeY))
+			if(map.checkCollision(posX, newY - size))
 			{
-				newY += sizeY;
-				newY = Math.round(newY) - sizeY;
-			}
-			if(map.checkCollision(newX - sizeX, posY))
-			{
-				newX -= sizeX;
-				newX = Math.round(newX) + sizeX;   
-			}
-			if(map.checkCollision(posX, newY - sizeY))
-			{
-				newY -= sizeY;
-				newY = Math.round(newY) + sizeY;
+				newY -= size;
+				newY = Math.round(newY) + size;
 			}
 				
-		
+			//this test will need to be change to test all map tile with in player size
+			//(or test the nears map tile outside size radius and spawn mob at least size away from anything),
+			//for it to work with mob bigger the 1 unit (1.2 kinda works, bigger than that acts weird)
+			//what it dose not is checks the 4 map squares around the nearest point 
+			
 			if(map.checkCollision(mapX,mapY) || map.checkCollision(mapX - 1,mapY) ||map.checkCollision(mapX,mapY - 1) ||map.checkCollision(mapX-1 ,mapY -1) )
-			{	if( Math.abs((mapX - newX)*(mapX - newX) + (mapY - newY)*(mapY - newY)) < Math.abs(size*size))
-				{
-				System.out.println("yep");
-			
-				double slope = (mapY - newY) / (mapX - newX);
-				double oldX = newX,oldY = newY;
-				// System.out.println(newX +" " + newY+ " " +Math.toDegrees(Math.atan(slope)));
-				   
-				   newX = mapX;
-				   newY = mapY;
-				   
-				   
-				   
-				 //  System.out.println(newX +" " + newY+ " " +Math.toDegrees(Math.atan(slope)));
-			
-				   if( oldX < mapX )
-					{ 
-					 //  System.out.println("1");
-						newX -= Math.cos(Math.atan(slope)) * size;
-						newY -= Math.sin(Math.atan(slope)) * size;
-					} 
-				   else
-					{ 
-						newX += Math.cos(Math.atan(slope)) * size;
-						newY += Math.sin(Math.atan(slope)) * size;
-					} 
-
-				 //  System.out.println(newX +" " + newY+ " " +Math.toDegrees(Math.atan(slope)));
-				
-				}
-			
-			}
-			
-		
-	
-		
-		
-		
-		
-		
-		
-				 
+			{	
+				return this.pointCollision(mapX,mapY,newX,newY,mob);
+			}				 
 	    double[] pos = {newX , newY};
 	    return pos;
 	}
+	
+	
+	public double[] pointCollision(double pointX, double pointY,double newX, double newY,Mob mob)
+	{
+		double 	size = mob.getSize();
+		
+		if( Math.abs((pointX - newX)*(pointX - newX) + (pointY - newY)*(pointY - newY)) < Math.abs(size*size))
+		{
+			double slope = (pointY - newY) / (pointX - newX);
+			double oldX = newX,oldY = newY;
+			
+			newX = pointX;
+			newY = pointY;
+
+		   if( oldX < pointX )
+			{ 
+			
+				newX -= Math.cos(Math.atan(slope)) * size;
+				newY -= Math.sin(Math.atan(slope)) * size;
+			} 
+		    else
+			{ 
+				newX += Math.cos(Math.atan(slope)) * size;
+				newY += Math.sin(Math.atan(slope)) * size;
+			} 
+		}
+		double[] pos = {newX , newY};
+		return pos;
+	}
+	
 }

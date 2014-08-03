@@ -118,7 +118,6 @@ public class PerspectiveFirstPerson implements Perspective
       if (side == 0)
       {
         perpWallDist = Math.abs((mapX - rayPosX + (1 - stepX) / 2) / rayDirX);
-       
       }
       else
       {
@@ -174,7 +173,7 @@ public class PerspectiveFirstPerson implements Perspective
     	{
     	
          
-	       //System.out.println("texy " + texY );
+	   
 	        int color = ImageStrip.getRGB(0, texY);
 	        //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
 	        if((x + y*screenWidth) >= pixels.length)

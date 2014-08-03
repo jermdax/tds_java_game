@@ -73,7 +73,7 @@ public class Mob
       movePosY = -(sin * x + cos * y);
     }*/
    
-    double[] pos =  physics.checkCollision(posX,posY, movePosX,movePosY,this);
+    double[] pos =  physics.checkMapCollision(posX,posY, movePosX,movePosY,this);
     
     posX = pos[0];
     posY = pos[1];

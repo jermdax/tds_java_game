@@ -23,7 +23,7 @@ public class Game implements Runnable
   //the preferred frames per second
   private static final int       DESIRED_FPS   = 60;
   //game name
-  public static  final String    TITLE         = "Counter_kike";
+  public static  final String    TITLE         = "Some_Game";
   //nanoSecs in a sec
   private static final long      NANO_PER_SEC  = 1000000000;
   //nanoSecs in a tick
@@ -39,7 +39,7 @@ public class Game implements Runnable
   private BufferedImage  background;
   //game texturepack, both TDS and FPS textures
   private TexturePack texPack = new TexturePack("by_software/map/sprites/", 
-                                                new Dimension(16, 16), new Dimension(32, 32));
+                                                new Dimension(16, 16), new Dimension(128, 128));
   
   //physics 
   private Physics physics;
@@ -76,9 +76,9 @@ public class Game implements Runnable
   
     map = new Map("by_software/map/MapTest.map");
     physics = new Physics(map);
-    //path, TDS size, FPS size
+
     //String name,int health, double speed, int acceleration, int damage,double size,double posX, double posY, Keyboard key, Map map,Physics physics)
-    player = new Player("Player",100,3,1,10,.25,3,3,key,map,physics);
+    player = new Player("Player",100,3,1,10,.5,3,3,key,map,physics);
     //load the map
     MapTile.loadAllTiles(texPack);
     perspective = new PerspectiveFirstPerson(map);

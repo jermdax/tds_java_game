@@ -47,7 +47,7 @@ private int startX = 300, startY = 300;
     //draw the map with the top left corner at the player pos - half the gamewindow size
     int
       halfWindX = (int)(Game.getWindowSize().getWidth() /2),
-      halfWindY = (int)(Game.getWindowSize().getWidth()/2),
+      halfWindY = (int)(Game.getWindowSize().getHeight()/2),
       startX    = (int)(player.getPosX()*SCALE*SIZE_X),
       startY    = (int)(player.getPosY()*SCALE*SIZE_X);
     //the line below is doing the rendering and the one i think has a issue
@@ -56,6 +56,6 @@ private int startX = 300, startY = 300;
     //draw player
     gr.setColor(Color.GREEN);
     //TODO dont use hardcoded values
-    gr.fillOval(halfWindX-4, halfWindY-4, 8, 8);
+    gr.fillOval(halfWindX-8, halfWindY-8, 16, 16);
   }
 }
