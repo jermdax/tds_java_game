@@ -2,14 +2,15 @@ package by_software.mob;
 
 import by_software.engine.physics.Physics;
 import by_software.map.Map;
+import by_software.engine.physics.Vec2d;
 
 public class Mob
 {
  // FAST("fast", 10, 20, 15, 5),STRONG("strong", 25, 6, 10, 15),TOUGH("tough", 40, 5, 10, 10),AGILE("agile", 10, 20, 25, 5);
 
-  protected Vec2d pos;//posX,  posY;
-  protected Vec2d dir;//dirX = 1,   dirY = 0;
-  protected Vec2d plane;//planeX = 0,  planeY = .66; 
+  protected Vec2d pos;
+  protected Vec2d dir = new Vec2d(1d, 0d);
+  protected Vec2d plane  = new Vec2d(0d, .66d);
   protected double speed,rotateSpeed = .5;
   protected long timeOld,timeNew;
   protected double size;
@@ -22,15 +23,14 @@ public class Mob
   int damage;
   
  
-  public Mob(String name, int health, double speed, int acceleration, int damage, double size,double posX ,double posY,Map map,Physics physics){
+  public Mob(String name, int health, double speed, int acceleration, int damage, double size, double posX, double posY, Map map, Physics physics){
     this.name = name;
     this.health = health;
     this.speed = speed;
     this.acceleration = acceleration;
     this.damage = damage;
     this.size = size;
-    this.posX = posX;
-    this.posY = posY;
+    this.pos = new Vec2d(posX, posY);
     this.map = map;
     this.physics = physics;
   }
@@ -60,7 +60,7 @@ public class Mob
    // System.out.println(dirY + "  " + dirX + " " + dirY *dirX);
   
     
-    double movePos = new Vec2d(dir.x * x + planeX *y, dir.y * x + planeY *y);
+    Vec2d movePos = new Vec2d(dir.x * x + plane.x * y, dir.y * x + plane.y *y);
     //comment below will mean strafe and walk speed are the same
     /* if( dirX <0)
     {
@@ -73,18 +73,15 @@ public class Mob
       movePosY = -(sin * x + cos * y);
     }*/
    
-    double[] pos =  physics.checkMapCollision(posX,posY, movePosX,movePosY,this);
+    double[] pos =  physics.checkMapCollision(this.pos.x, this.pos.y, movePos.x, movePos.y, this);
     
-    posX = pos[0];
-    posY = pos[1];
- 
+    this.pos.set(pos[0], pos[1]);
   }
   
   //move player in world space
   public void moveWorld(double x, double y)
   {
-    pos.x = x;
-    pos.y = y;
+    pos.set(pos.x + x, pos.y + y);
   }
   
 //Shitty matrix multiplaction 
@@ -96,23 +93,28 @@ public class Mob
     Vec2d oldPlane = new Vec2d(plane.x, plane.y);
 
     //rotate player direction
-    dir.set( Math.cos(Math.toRadians(angle)) * oldDir.X - Math.sin(Math.toRadians(angle)) * oldDir.y,
-             Math.sin(Math.toRadians(angle)) * oldDir.X + Math.cos(Math.toRadians(angle)) * oldDir.y);
+    dir.set( Math.cos(Math.toRadians(angle)) * oldDir.x - Math.sin(Math.toRadians(angle)) * oldDir.y,
+             Math.sin(Math.toRadians(angle)) * oldDir.x + Math.cos(Math.toRadians(angle)) * oldDir.y);
 
     //rotate screen plane
-    plane.set( Math.cos(Math.toRadians(angle)) * oldPlane.X - Math.sin(Math.toRadians(angle)) * oldPlane.y,
-               Math.sin(Math.toRadians(angle)) * oldPlane.X + Math.cos(Math.toRadians(angle)) * oldPlane.y);
+    plane.set( Math.cos(Math.toRadians(angle)) * oldPlane.x - Math.sin(Math.toRadians(angle)) * oldPlane.y,
+               Math.sin(Math.toRadians(angle)) * oldPlane.x + Math.cos(Math.toRadians(angle)) * oldPlane.y);
   }
   
-  public String getClassName(){ return this.name; }
-  
-  public int getHealth(){ return this.health; }
-  
-  public double getSpeed(){ return this.speed; }
-  
-  public double getSize(){ return this.size; }
-  
-  public int getAcceleration(){ return this.acceleration; }
-  
-  public int getDamage(){ return this.damage; }
+  public String getClassName(){ return name;         }
+  public int getHealth()      { return health;       }
+  public double getSpeed()    { return speed;        }
+  public double getSize()     { return size;         }
+  public int getAcceleration(){ return acceleration; }
+  public int getDamage()      { return damage;       }
+
+  public Vec2d  getPos()     {return pos;    }
+  public double getPosX()    {return pos.x;  }
+  public double getPosY()    {return pos.y;  }
+  public Vec2d  getDir()     {return dir;    }
+  public double getDirX()    {return dir.x;  }
+  public double getDirY()    {return dir.y;  }
+  public Vec2d  getPlane()   {return plane;  }
+  public double getPlaneX()  {return plane.x;}
+  public double getPlaneY()  {return plane.y;}
 } 

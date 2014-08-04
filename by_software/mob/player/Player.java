@@ -18,7 +18,7 @@ public class Player extends Mob{
   
   public Player(String name,int health, double speed, int acceleration, int damage,double size,double posX, double posY, Keyboard key, Map map,Physics physics)
   {
-	  super(name, health,speed, acceleration, damage,size,posX ,posY,map,physics);
+	  super(name, health, speed, acceleration, damage, size, posX ,posY, map, physics);
 	
     //posX = x;
    // posY = y;
@@ -64,21 +64,13 @@ public class Player extends Mob{
     this.rotate(input.getMouseX());
     input.reset();
     timeNew = System.nanoTime();  
-    double timePerTick = (timeNew - timeOld)/ 1000000000.0;;
+    double timePerTick = (timeNew - timeOld)/ 1000000000.0;
     //System.out.println(timePerTick);
   
     x *=  timePerTick;
     y *=  timePerTick;
-    this.moveLocal(x,y);
+    this.moveLocal(x, y);
     timeOld = timeNew;
 
   }
-
-  public double getPosX()    {return this.posX;}
-  public double getPosY()    {return this.posY;}
-  public double getDirX()    {return this.dirX;}
-  public double getDirY()    {return this.dirY;}
-  public double getPlaneX()  {return this.planeX;}
-  public double getPlaneY()  {return this.planeY;}
-
 }
