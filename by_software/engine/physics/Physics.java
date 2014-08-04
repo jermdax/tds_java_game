@@ -2,6 +2,7 @@ package by_software.engine.physics;
 
 import by_software.map.Map;
 import by_software.mob.Mob;
+import by_software.engine.physics.Vec2d;
 
 public class Physics {
 	private Map map;
@@ -12,15 +13,17 @@ public class Physics {
 	}
 	
 	//keep mob size away from walls , doent not work if mob is bigger the 1 map unit
-	public double[] checkMapCollision(double posX, double posY, double movX, double movY,Mob mob)
+	public Vec2d checkMapCollision(double posX, double posY, double movX, double movY,Mob mob)
 	{
-		double  newX = posX + movX,
+		double
+        newX = posX + movX,
 				newY = posY + movY,
 				size = mob.getSize();
 			
 		
 		//get nearest map tile 
-		int mapX = (int) Math.round(newX),
+		int 
+      mapX = (int) Math.round(newX),
 			mapY = (int) Math.round(newY);
 
 			//checks collisions in cardinal directions
@@ -50,16 +53,15 @@ public class Physics {
 			//for it to work with mob bigger the 1 unit (1.2 kinda works, bigger than that acts weird)
 			//what it dose not is checks the 4 map squares around the nearest point 
 			
-			if(map.checkCollision(mapX,mapY) || map.checkCollision(mapX - 1,mapY) ||map.checkCollision(mapX,mapY - 1) ||map.checkCollision(mapX-1 ,mapY -1) )
+			if(map.checkCollision(mapX, mapY) || map.checkCollision(mapX - 1, mapY) ||map.checkCollision(mapX, mapY - 1) ||map.checkCollision(mapX-1, mapY -1) )
 			{	
-				return this.pointCollision(mapX,mapY,newX,newY,mob);
+				return this.pointCollision(mapX, mapY, newX, newY, mob);
 			}				 
-	    double[] pos = {newX , newY};
-	    return pos;
+	    return new Vec2d(newX , newY);
 	}
 	
 	
-	public double[] pointCollision(double pointX, double pointY,double newX, double newY,Mob mob)
+	public Vec2d pointCollision(double pointX, double pointY,double newX, double newY,Mob mob)
 	{
 		double 	size = mob.getSize();
 		
@@ -83,8 +85,7 @@ public class Physics {
 				newY += Math.sin(Math.atan(slope)) * size;
 			} 
 		}
-		double[] pos = {newX , newY};
-		return pos;
+		return new Vec2d(newX, newY);
 	}
 	
 }

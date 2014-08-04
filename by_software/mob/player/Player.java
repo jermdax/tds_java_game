@@ -4,27 +4,24 @@ import by_software.engine.input.Keyboard;
 import by_software.engine.physics.Physics;
 import by_software.map.Map;
 import by_software.mob.Mob;
+import by_software.engine.physics.Vec2d;
 
 public class Player extends Mob{
 
   //private double posX = 2 ,  posY = 2;
  // private double dirX = 1,  dirY = 0;
-//  private double planeX = 0,  planeY = .66; 
+ // private double planeX = 0,  planeY = .66; 
  // private double speed = 3 ,rotateSpeed = .5;
   private Keyboard input;
   private long timeOld,timeNew;
  // private double size = .5;
   //private Map map;
   
-  public Player(String name,int health, double speed, int acceleration, int damage,double size,double posX, double posY, Keyboard key, Map map,Physics physics)
+  public Player(String name, int health, double speed, int acceleration, int damage, double size, Vec2d pos, Keyboard key, Map map, Physics physics)
   {
-	  super(name, health, speed, acceleration, damage, size, posX ,posY, map, physics);
-	
-    //posX = x;
-   // posY = y;
+	  super(name, health, speed, acceleration, damage, size, pos, map, physics);
     input = key;
     timeOld = System.nanoTime();
-    ;
   }
   @Override
   public void update()

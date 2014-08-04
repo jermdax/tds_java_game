@@ -6,7 +6,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
 import by_software.engine.input.Keyboard;
-import by_software.engine.physics.Physics;
+import by_software.engine.physics.*;
 import by_software.engine.render.graphics.GameWindow;
 import by_software.engine.render.graphics.TexturePack;
 import by_software.engine.render.perspective.Perspective;
@@ -77,8 +77,9 @@ public class Game implements Runnable
     map = new Map("by_software/map/MapTest.map");
     physics = new Physics(map);
 
-    //String name,int health, double speed, int acceleration, int damage,double size,double posX, double posY, Keyboard key, Map map,Physics physics)
-    player = new Player("Player",100,3,1,10,.5,3,3,key,map,physics);
+    //String name, int health, double speed, int acceleration, int damage, double size, Vec2d pos, Keyboard key, Map map, Physics physics)
+    //TODO dont use hard coded values
+    player = new Player("Player", 100, 3, 1, 10, .5 , new Vec2d(3, 3), key, map, physics);
     //load the map
     MapTile.loadAllTiles(texPack);
     perspective = new PerspectiveFirstPerson(map);

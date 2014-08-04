@@ -23,14 +23,14 @@ public class Mob
   int damage;
   
  
-  public Mob(String name, int health, double speed, int acceleration, int damage, double size, double posX, double posY, Map map, Physics physics){
+  public Mob(String name, int health, double speed, int acceleration, int damage, double size, Vec2d pos, Map map, Physics physics){
     this.name = name;
     this.health = health;
     this.speed = speed;
     this.acceleration = acceleration;
     this.damage = damage;
     this.size = size;
-    this.pos = new Vec2d(posX, posY);
+    this.pos = pos;
     this.map = map;
     this.physics = physics;
   }
@@ -45,8 +45,6 @@ public class Mob
 //will move the mob with respect to direction
   public void moveLocal(double x, double y)
   {
-   
-	  
 	  //#######################
 	  // Don't remove commented code!
 	  // mobs will move slower left and right as is
@@ -59,7 +57,6 @@ public class Mob
    // double cos = Math.cos(angle);
    // System.out.println(dirY + "  " + dirX + " " + dirY *dirX);
   
-    
     Vec2d movePos = new Vec2d(dir.x * x + plane.x * y, dir.y * x + plane.y *y);
     //comment below will mean strafe and walk speed are the same
     /* if( dirX <0)
@@ -72,10 +69,8 @@ public class Mob
       movePosX = -(cos * x - sin * y);
       movePosY = -(sin * x + cos * y);
     }*/
-   
-    double[] pos =  physics.checkMapCollision(this.pos.x, this.pos.y, movePos.x, movePos.y, this);
-    
-    this.pos.set(pos[0], pos[1]);
+
+    pos =  physics.checkMapCollision(this.pos.x, this.pos.y, movePos.x, movePos.y, this);
   }
   
   //move player in world space
