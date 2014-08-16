@@ -1,24 +1,41 @@
 package by_software.engine.physics;
 
+import java.util.ArrayList;
+
+import by_software.entity.Entity;
 import by_software.map.Map;
-import by_software.mob.Mob;
-import by_software.engine.physics.Vec2d;
 
 public class Physics {
 	private Map map;
+	private ArrayList<Entity> entitys;
 	
-	public Physics(Map map)
+	public Physics(Map map, ArrayList<Entity> entitys)
 	{
 		this.map = map;
+		this.entitys = entitys;
 	}
 	
 	//keep mob size away from walls , doent not work if mob is bigger the 1 map unit
-	public Vec2d checkMapCollision(double posX, double posY, double movX, double movY,Mob mob)
+	
+	
+	public void checkEntityCollision( double movX, double movY,Entity entity)
+	{
+		for(Entity e: entitys)
+		{
+			if(e != entity)
+			{
+				
+				 entity.setPos(pointCollision(e.getSize(),e.getPosX(), e.getPosY(),entity.getPosX(), entity.getPosY(),entity) );
+			}
+		}
+	}
+	
+	public Vec2d checkMapCollision(double posX, double posY, double movX, double movY,Entity entity)
 	{
 		double
         newX = posX + movX,
 				newY = posY + movY,
-				size = mob.getSize();
+				size = entity.getSize();
 			
 		
 		//get nearest map tile 
@@ -55,17 +72,17 @@ public class Physics {
 			
 			if(map.checkCollision(mapX, mapY) || map.checkCollision(mapX - 1, mapY) ||map.checkCollision(mapX, mapY - 1) ||map.checkCollision(mapX-1, mapY -1) )
 			{	
-				return this.pointCollision(mapX, mapY, newX, newY, mob);
+				return this.pointCollision(0,mapX, mapY, newX, newY, entity);
 			}				 
 	    return new Vec2d(newX , newY);
 	}
 	
 	
-	public Vec2d pointCollision(double pointX, double pointY,double newX, double newY,Mob mob)
+	public Vec2d pointCollision(double radius ,double pointX, double pointY,double newX, double newY,Entity entity)
 	{
-		double 	size = mob.getSize();
+		double 	size = entity.getSize();
 		
-		if( Math.abs((pointX - newX)*(pointX - newX) + (pointY - newY)*(pointY - newY)) < Math.abs(size*size))
+		if( Math.abs((pointX - newX)*(pointX - newX) + (pointY - newY)*(pointY - newY)) < Math.abs((size+ radius)*(size + radius)))
 		{
 			double slope = (pointY - newY) / (pointX - newX);
 			double oldX = newX,oldY = newY;
@@ -76,13 +93,13 @@ public class Physics {
 		   if( oldX < pointX )
 			{ 
 			
-				newX -= Math.cos(Math.atan(slope)) * size;
-				newY -= Math.sin(Math.atan(slope)) * size;
+				newX -= Math.cos(Math.atan(slope)) * (size+ radius);
+				newY -= Math.sin(Math.atan(slope)) * (size+ radius);
 			} 
 		    else
 			{ 
-				newX += Math.cos(Math.atan(slope)) * size;
-				newY += Math.sin(Math.atan(slope)) * size;
+				newX += Math.cos(Math.atan(slope)) * (size+ radius);
+				newY += Math.sin(Math.atan(slope)) * (size+ radius);
 			} 
 		}
 		return new Vec2d(newX, newY);

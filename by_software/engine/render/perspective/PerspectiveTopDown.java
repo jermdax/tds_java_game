@@ -3,11 +3,14 @@ package by_software.engine.render.perspective;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import by_software.Game;
+import by_software.engine.physics.Vec2d;
+import by_software.entity.Entity;
+import by_software.entity.mob.player.Player;
 import by_software.map.Map;
 import by_software.map.MapTile;
-import by_software.mob.player.Player;
 
 public class PerspectiveTopDown implements Perspective
 {
@@ -15,15 +18,17 @@ public class PerspectiveTopDown implements Perspective
   //TODO dont hardcode in the size
   private static BufferedImage mapImg;
   //scale by which the sprites are scaled when loaded
-  public static final int SCALE = 2;
-
+  public static final int SCALE = 1;
+  
+  private ArrayList<Entity> entitys;
   private static final  int 
     SIZE_X = (int)MapTile.getTopDownSize().getWidth(), 
     SIZE_Y = (int)MapTile.getTopDownSize().getHeight();
 
-  public PerspectiveTopDown(Map worldMap)
+  public PerspectiveTopDown(Map worldMap,ArrayList<Entity> entitys)
   {
     this.worldMap = worldMap;
+    this.entitys = entitys;
     mapImg = new BufferedImage((int)(worldMap.getMapSizeX() * MapTile.getTopDownSize().getWidth()*SCALE), 
                                (int)(worldMap.getMapSizeY() * MapTile.getTopDownSize().getHeight()*SCALE), 
                                BufferedImage.TYPE_INT_ARGB);
@@ -45,11 +50,12 @@ private int startX = 300, startY = 300;
  public void render(Graphics gr, int screenWidth, int screenHidth ,Game game, Player player)
   {
     //draw the map with the top left corner at the player pos - half the gamewindow size
-    int
+	
+	 int
       halfWindX = (int)(Game.getWindowSize().getWidth() /2),
       halfWindY = (int)(Game.getWindowSize().getHeight()/2),
       startX    = (int)(player.getPosX()*SCALE*SIZE_X),
-      startY    = (int)(player.getPosY()*SCALE*SIZE_X);
+      startY    = (int)(player.getPosY()*SCALE*SIZE_Y);
     //the line below is doing the rendering and the one i think has a issue
     //it has some hardcoded values, they are just while debugging
     gr.drawImage(mapImg, 0, 0, halfWindX*2, halfWindY*2, startX-halfWindX, startY-halfWindY, startX+halfWindX, startY+halfWindY, Color.RED, null);
@@ -57,5 +63,14 @@ private int startX = 300, startY = 300;
     gr.setColor(Color.GREEN);
     //TODO dont use hardcoded values
     gr.fillOval(halfWindX-8, halfWindY-8, 16, 16);
+    for(Entity e: entitys)
+    {
+    	if(e != player)
+    	{ gr.setColor(Color.BLUE);
+    		 gr.fillOval(halfWindX -8  + (int)((e.getPosX() - player.getPosX())*SCALE*SIZE_X) , halfWindY-8 + (int)((e.getPosY()- player.getPosY())*SCALE*SIZE_Y), 16, 16);
+    	
+    	
+    	}
+    }
   }
 }

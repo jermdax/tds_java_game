@@ -2,25 +2,37 @@ package by_software.engine.render.perspective;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.util.ArrayList;
 
 import by_software.Game;
+import by_software.Util;
+import by_software.engine.physics.Vec2d;
+import by_software.entity.Entity;
+import by_software.entity.mob.player.Player;
 import by_software.map.Map;
 import by_software.map.MapTile;
-import by_software.mob.player.Player;
 
 public class PerspectiveFirstPerson implements Perspective
 {
 
   private static Map worldMap;
   private BufferedImage image;
+  private ArrayList<Entity> entitys;
   private int [] pixels;
-  private int test = 1;
+  private double[] depthBuffer; 
+  public static int transparentColor = -65281;
   
-  public PerspectiveFirstPerson(Map worldMap)
+  public PerspectiveFirstPerson(Map worldMap, ArrayList<Entity> entitys, int screenWidth)
   {
     this.worldMap = worldMap;
+    this.entitys = entitys;
+    this.depthBuffer = new double[screenWidth];
+    
+    
   }
 
   public void render(Graphics gr, int screenWidth, int screenHeight ,Game game, Player player)
@@ -36,7 +48,7 @@ public class PerspectiveFirstPerson implements Perspective
     gr.fillRect(0,0,screenWidth,screenHeight);
 
     
-    for(int x = 0; x <= screenWidth; x++)
+    for(int x = 0; x < screenWidth; x++)
     { 
 
       //cameraX is the relitive position of i int the screen where the left side = -1 and right = 1
@@ -123,6 +135,7 @@ public class PerspectiveFirstPerson implements Perspective
       {
         perpWallDist = Math.abs((mapY - rayPosY + (1 - stepY) / 2) / rayDirY);
       }
+      depthBuffer[x] = perpWallDist;
       
       int lineHeight = Math.abs((int)(screenHeight /perpWallDist));
 
@@ -165,11 +178,10 @@ public class PerspectiveFirstPerson implements Perspective
       
      for(int y = drawStart; y<drawEnd; y++)
       {
-    	 //int texY =(int) (MapTile.getFpsSize().height  /(double)lineHeight  * (y - lineHeight/2));
     	 
     	 int d = y * 256 - screenHeight * 128 + lineHeight * 128;  //256 and 128 factors to avoid floats
          int texY = (((d * MapTile.getFpsSize().height) / lineHeight) / 256);
-    	if(texY < MapTile.getFpsSize().width && texY >= 0)//remove when collison  are using sphears
+    	if(texY < MapTile.getFpsSize().width && texY >= 0)
     	{
     	
          
@@ -185,10 +197,87 @@ public class PerspectiveFirstPerson implements Perspective
 	        {
 	        	pixels[x + y*screenWidth] = color;
 	        }
-	       } 
+	     } 
       }
     }
+    
+    ///////
+    //draw entity
+    //lot of math that barely works 
+    for(Entity e: entitys)
+    {
+    
+    	if(e != player)
+    	{
+    		
+    		Point2D.Double entityLocal = player.insideFieldOfView(e);
+    		if(entityLocal != null)
+    		{
+    			
+    			double sx = player.calculateScreenX(entityLocal) * screenWidth;
+    			double distance =   player.perpendicularDistance(e);
+    			
+        		
+
+				int lineHeight = Math.abs((int)(screenHeight / distance));
+				int drawStart = -lineHeight/2 + screenHeight/2;
+				if(drawStart < 0)
+				{
+					drawStart = 0;
+				}
+
+				int drawEnd = lineHeight/2 + screenHeight/2;
+				if(drawEnd > screenHeight)
+				{
+					drawEnd = screenHeight;
+				}
+		      
+	  			int width = (int)( (double)lineHeight/(double)e.getHeight() *(double) e.getWidth()); 
+	  			double texX = 0;
+	  			
+	  			for(int x = (int)(sx - width/2); x <sx + width/2;x++)
+				{	
+	  				
+	  				if(x >=0 && x < screenWidth)
+					{
+	  					if(texX >= e.getWidth())
+	  					{
+	  						texX = e.getWidth()-1;
+	  					}
+	  					
+	  					if(distance < depthBuffer[x])
+	  					{
+				  			for(int y = drawStart; y < drawEnd;y++)
+		    				{	
+				  				int d = y * 256 - screenHeight * 128 + lineHeight * 128;  //256 and 128 factors to avoid floats
+				  		        int texY = (((d * e.getHeight()) / lineHeight) / 256);
+				  		       
+				  		        if(texY < e.getHeight() && texY >= 0)
+				  		    	{
+					  		        int color = e.getColor((int)texX, texY);
+					  		         
+					  		        if(color != transparentColor)
+					  		        {
+					  		        	pixels[(int)x + y*screenWidth] = color;
+					  		        }
+				  		    	}
+	    	    			}
+    					}
+    				}
+	  			
+	  				texX += (double)e.getWidth()/(double)width ;
+				}
+    		
+    		}
+    	}
+    	
+    	
+    }
+    //////
+    
     gr.drawImage(image, 0, 0, null);
+
+    
     clear();
     
 

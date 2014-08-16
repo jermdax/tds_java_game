@@ -1,5 +1,7 @@
 package by_software.engine.physics;
 
+import java.awt.geom.Point2D;
+
 public class Vec2d
 {
   public double x;
@@ -16,7 +18,13 @@ public class Vec2d
   public Vec2d(Vec2d another)
   {
     this.x = another.x;
-    this.y = another.x;
+    this.y = another.y;
+  }
+  
+  public Vec2d( Point2D p)
+  {
+    this.x = p.getX();
+    this.y = p.getY();
   }
 
   //setters
@@ -41,6 +49,12 @@ public class Vec2d
     y = newY;
   }
 
+  public double length()
+  {
+	  return Math.sqrt((x*x) + (y*y));
+  }
+  
+  
 
   //add, sub, mul, div
   public void add(final Vec2d that)
@@ -66,7 +80,16 @@ public class Vec2d
     this.x /= that.x;
     this.y /= that.y;
   }
-
+  
+  public void translate(double x,double y)
+  {
+	  this.x += x;
+	  this.y += y;
+  }
+  public void translate(final Vec2d that)
+  {
+	  this.add(that);
+  }
 
   //add, sub, mul, div (ALL STATIC)
   public static Vec2d add(Vec2d vec1, Vec2d vec2)

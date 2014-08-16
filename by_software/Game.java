@@ -4,17 +4,21 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import by_software.engine.input.Keyboard;
-import by_software.engine.physics.*;
+import by_software.engine.physics.Physics;
+import by_software.engine.physics.Vec2d;
 import by_software.engine.render.graphics.GameWindow;
 import by_software.engine.render.graphics.TexturePack;
 import by_software.engine.render.perspective.Perspective;
 import by_software.engine.render.perspective.PerspectiveFirstPerson;
 import by_software.engine.render.perspective.PerspectiveTopDown;
+import by_software.entity.Entity;
+import by_software.entity.EntityTestPillar;
+import by_software.entity.mob.player.Player;
 import by_software.map.Map;
 import by_software.map.MapTile;
-import by_software.mob.player.Player;
 
 
 public class Game implements Runnable
@@ -48,6 +52,7 @@ public class Game implements Runnable
   private Perspective otherPerspective;
   //Player
   private Player player;
+  private EntityTestPillar testp;
   //Map
   private Map map;
   //keyboard input
@@ -65,25 +70,39 @@ public class Game implements Runnable
   private long curNano   = 0;
 
  
+  private ArrayList<Entity> entitys;
+  
   public Game()
   {
     key = new Keyboard(.25, this);
-    
-   
     window = new GameWindow(TITLE, WINDOW_SIZE,key);
     bStrat = window.getBufferStrategy();
     isRunning = true;
   
+    entitys = new ArrayList<>();
+    
     map = new Map("by_software/map/MapTest.map");
-    physics = new Physics(map);
+    physics = new Physics(map,entitys);
 
     //String name, int health, double speed, int acceleration, int damage, double size, Vec2d pos, Keyboard key, Map map, Physics physics)
     //TODO dont use hard coded values
-    player = new Player("Player", 100, 3, 1, 10, .5 , new Vec2d(3, 3), key, map, physics);
+    player = new Player("Player", 100, 3, 1, 10, .4 , new Vec2d(7,8), key, map, physics);
+    testp = new EntityTestPillar(  new Vec2d(5, 3), map, physics);
+    
     //load the map
     MapTile.loadAllTiles(texPack);
-    perspective = new PerspectiveFirstPerson(map);
-    otherPerspective = new PerspectiveTopDown(map);
+    
+    entitys.add(player);
+    entitys.add(testp);
+    entitys.add( new EntityTestPillar(  new Vec2d(6, 3), map, physics));
+    entitys.add( new EntityTestPillar(  new Vec2d(7, 3), map, physics));
+    entitys.add( new EntityTestPillar(  new Vec2d(8, 3), map, physics));
+    entitys.add( new EntityTestPillar(  new Vec2d(5, 5), map, physics));
+    entitys.add( new EntityTestPillar(  new Vec2d(6, 5), map, physics));
+    entitys.add( new EntityTestPillar(  new Vec2d(7, 5), map, physics));
+    entitys.add( new EntityTestPillar(  new Vec2d(8, 5), map, physics));
+    perspective = new PerspectiveFirstPerson(map,entitys,(int)WINDOW_SIZE.getWidth());
+    otherPerspective = new PerspectiveTopDown(map,entitys);
     run();
   }
 
@@ -138,9 +157,13 @@ public class Game implements Runnable
   private void update()
   {
     //update the game logic based on input and time (AI?, projectiles)
-    player.update();
-    key.handleKeys();
-    window.resetMousePos();
+	  key.handleKeys();
+	  for(Entity e:entitys)
+	  {
+		  e.update(); 
+	  }
+   
+      window.resetMousePos();
 
   }
 
