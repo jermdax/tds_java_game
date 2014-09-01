@@ -203,8 +203,7 @@ public class PerspectiveFirstPerson implements Perspective
     
     ///////
     //draw entity
-    //lot of math that barely works 
-    for(Entity e: entitys)
+    for(Entity e: sortDistance(player, entitys, false))
     {
     
     	if(e != player)
@@ -292,6 +291,29 @@ public class PerspectiveFirstPerson implements Perspective
   	    	
   	    }
   	}
+  	//sort by distance, later maybe only if in Players field of view
+  	public Entity[] sortDistance(Entity player, ArrayList<Entity> toSort, boolean reverse)
+  	{
+  		//TODO use better algorithm
+  		Entity[] result = toSort.toArray(new Entity[toSort.size()] );
+  		for(int j = 0  ; j < result.length;j++)
+  		{
+	  		for(int i = 0 ; i < result.length-1 ;i++)
+	  		{
+	  			
+	  			if((Util.distance(player, result[i]) > Util.distance(player, result[i + 1])) == reverse)
+	  			{
+	  				Entity temp = result[i];
+	  				result[i] = result[i + 1];
+	  				result[i + 1] = temp;
+	  			}
+	  			
+	  		}
+  		}
+  		return result;
+  		
+  	}
+  	
   }
 
 
