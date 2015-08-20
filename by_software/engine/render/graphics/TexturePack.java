@@ -22,7 +22,7 @@ public class TexturePack
   private static final  String        ERROR_LOADING_MAP_TEXTURES  = "Failed to load map texure!";
   
   private static final  String topDownFileName = "TopDownSprites.png";
-  private static final  String fpsFileName     = "FpsTextures.png";
+  private static final  String fpsFileName     = "FpsTextures32.png";
   private static final  String mobFileName     = "";
   private static final  String weaponFileName  = "";
   
@@ -85,15 +85,15 @@ public class TexturePack
   
   public BufferedImage getFpsXTexture(int x, int y)
   {
-	x *= 2;  
-    return allFpsTextures.getSubimage(x * fpsSize.width, y * fpsSize.height, fpsSize.width, fpsSize.height);
+	  //x *= 2;  
+    return allFpsTextures.getSubimage(x, y, fpsSize.width, fpsSize.height);
   }
   
   public BufferedImage getFpsYTexture(int x, int y)
   {
-	  x *= 2;
+	  //x *= 2;
 	  x++;
-    return allFpsTextures.getSubimage(x * fpsSize.width, y * fpsSize.height, fpsSize.width, fpsSize.height);
+    return allFpsTextures.getSubimage(x, y, fpsSize.width, fpsSize.height);
   }
   
   public BufferedImage[] getTextureSet(int x, int y)
